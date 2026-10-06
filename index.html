@@ -214,9 +214,13 @@
     <audio id="audio" src="song.mp3" preload="auto"></audio>
 
     <div id="ui">
-        <div class="title-badge">Buck Owens &bull; 1964 Iconic Country</div>
-        <h1>The Girl Made <span>In Japan</span></h1>
-        <div class="subtitle">3D Kinetic Typographic Showcase</div>
+        <div class="title-badge">A Dedicated 3D Cinematic Journey</div>
+        <h1>MY FUTURE PARTNER, <span>THIS IS FOR YOU</span></h1>
+        <div class="subtitle" style="font-size: 15px; font-weight: 700; line-height: 1.65; letter-spacing: 1.5px; text-transform: none; max-width: 680px; text-align: center; margin-bottom: 32px; color: #5a189a;">
+            A timeless 3D journey through love, music, and quiet moments, crafted specially for my future wife.<br>
+            Written in the stars and created with all my heart in <strong>August 2026</strong>.<br>
+            Every frame and memory here belongs to you.
+        </div>
         <div class="btn-group">
             <button class="btn" id="playBtn" onclick="handleStartClick(15.0);">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -1000,32 +1004,37 @@
             scene.add(moonLight);
         })();
 
-        // EXPANSIVE SEASIDE BEACH SAND TERRAIN (Left, Right & Road Center for "Walkin' In The Sand")
-        const sandMat = new THREE.MeshStandardMaterial({ color: 0xffd6e0, roughness: 0.88, metalness: 0.05 });
+        // EXPANSIVE WARM GOLDEN BEACH SAND TERRAIN (Left, Right & Road Center for "Walkin' In The Sand")
+        // Uses MeshBasicMaterial with warm golden sand color & ground texture repeat so point lights NEVER turn it blue!
+        const sandTex = textureLoader.load('assets/ground_anime.jpg');
+        sandTex.wrapS = THREE.RepeatWrapping;
+        sandTex.wrapT = THREE.RepeatWrapping;
+        sandTex.repeat.set(12, 12);
+        const sandMat = new THREE.MeshBasicMaterial({ map: sandTex, color: 0xf4d06f });
 
         // Center sand dune along road
-        const duneCenter = new THREE.Mesh(new THREE.PlaneGeometry(24, 26), sandMat);
+        const duneCenter = new THREE.Mesh(new THREE.PlaneGeometry(28, 28), sandMat);
         duneCenter.rotation.x = -Math.PI / 2;
         duneCenter.position.set(0, -1.32, -105.0);
 
         // Left side expansive beach dune
-        const duneLeft = new THREE.Mesh(new THREE.PlaneGeometry(32, 28), sandMat);
+        const duneLeft = new THREE.Mesh(new THREE.PlaneGeometry(42, 32), sandMat);
         duneLeft.rotation.x = -Math.PI / 2;
-        duneLeft.position.set(-18.0, -1.31, -105.0);
+        duneLeft.position.set(-22.0, -1.31, -105.0);
 
         // Right side expansive beach dune
-        const duneRight = new THREE.Mesh(new THREE.PlaneGeometry(32, 28), sandMat);
+        const duneRight = new THREE.Mesh(new THREE.PlaneGeometry(42, 32), sandMat);
         duneRight.rotation.x = -Math.PI / 2;
-        duneRight.position.set(18.0, -1.31, -105.0);
+        duneRight.position.set(22.0, -1.31, -105.0);
 
         // Organic sand mounds on flanks
-        const moundLeft = new THREE.Mesh(new THREE.SphereGeometry(6.5, 16, 12), sandMat);
-        moundLeft.scale.set(1.8, 0.22, 1.2);
-        moundLeft.position.set(-12.5, -1.33, -104.0);
+        const moundLeft = new THREE.Mesh(new THREE.SphereGeometry(7.0, 16, 12), sandMat);
+        moundLeft.scale.set(2.0, 0.25, 1.3);
+        moundLeft.position.set(-13.0, -1.33, -104.0);
 
-        const moundRight = new THREE.Mesh(new THREE.SphereGeometry(6.5, 16, 12), sandMat);
-        moundRight.scale.set(1.8, 0.22, 1.2);
-        moundRight.position.set(12.5, -1.33, -104.0);
+        const moundRight = new THREE.Mesh(new THREE.SphereGeometry(7.0, 16, 12), sandMat);
+        moundRight.scale.set(2.0, 0.25, 1.3);
+        moundRight.position.set(13.0, -1.33, -104.0);
 
         const lake = new THREE.Mesh(
             new THREE.PlaneGeometry(36, 20),
