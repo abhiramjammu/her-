@@ -546,15 +546,15 @@
         }));
 
         const sakuraBurstParticles = [];
-        const SAKURA_COUNT = 180;
+        const SAKURA_COUNT = 360;
         for (let i = 0; i < SAKURA_COUNT; i++) {
             const mat = sakuraMaterials[i % sakuraMaterials.length];
-            const size = (i % 3 === 0) ? 0.78 : 0.48;
+            const size = (i % 3 === 0) ? 0.85 : 0.52;
             const mesh = new THREE.Mesh(new THREE.PlaneGeometry(size, size), mat);
             mesh.position.set(
-                (Math.random() - 0.5) * 28.0,
-                Math.random() * 22.0 + 2.0,
-                -162.0 - Math.random() * 44.0
+                (Math.random() - 0.5) * 30.0,
+                Math.random() * 24.0 + 2.0,
+                -170.0 - Math.random() * 22.0
             );
             mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
             mesh.userData = {
@@ -1808,16 +1808,18 @@
 
             // Falling Sakura Cherry Blossom Flowers, Pink Petals & Golden Leaves Burst (Diorama 6: 51.5s - 59.0s)
             const sakuraActive = (curAudioTime >= 51.5 && curAudioTime <= 59.0);
+            const isSpringWord = (curAudioTime >= 55.5 && curAudioTime <= 58.8); // Massive burst when "Spring" word appears!
             sakuraBurstParticles.forEach(p => {
                 if (sakuraActive) {
                     p.visible = true;
-                    p.rotation.x += p.userData.rotX;
-                    p.rotation.y += p.userData.rotY;
-                    p.rotation.z += p.userData.rotZ;
-                    p.position.y -= p.userData.fallSpeed;
-                    p.position.x += Math.sin(curAudioTime * p.userData.swayFreq + p.userData.seed) * p.userData.swayAmp;
+                    const speedMult = isSpringWord ? 2.5 : 1.0;
+                    p.rotation.x += p.userData.rotX * speedMult;
+                    p.rotation.y += p.userData.rotY * speedMult;
+                    p.rotation.z += p.userData.rotZ * speedMult;
+                    p.position.y -= p.userData.fallSpeed * speedMult;
+                    p.position.x += Math.sin(curAudioTime * p.userData.swayFreq + p.userData.seed) * p.userData.swayAmp * (isSpringWord ? 1.8 : 1.0);
                     if (p.position.y < -1.0) {
-                        p.position.y = 18.0 + Math.random() * 6.0;
+                        p.position.y = 18.0 + Math.random() * 8.0;
                     }
                 } else {
                     p.visible = false;
