@@ -1050,58 +1050,64 @@
         // =========================================================================
         const coupleMeshes = [];
 
-        // --- ENTRANCE ARCHWAY (Z = 10.0, Spanning across start of road) ---
-        const entranceTorii = createBillboard('assets/torii_arch_clean.png', 16.0, 16.0);
-        entranceTorii.position.set(0.0, 6.5, 10.0);
+        // --- ENTRANCE ARCHWAY (Z = 28.0, Camera flies through it first thing) ---
+        const entranceTorii = createBillboard('assets/torii_arch_clean.png', 26.0, 26.0);
+        entranceTorii.position.set(0.0, 11.5, 28.0);
         if (entranceTorii.material) entranceTorii.material.depthWrite = false;
         multiplaneGroup.add(entranceTorii);
 
-        // --- 3 INTRO FULL SENTENCE PLANES (Straight-Line Fly-Through) ---
-        function createFullSentenceTexture(text) {
+        // --- 3 INTRO FULL SENTENCE PLANES (Two-Line, Big, Static Positions) ---
+        function createFullSentenceTexture(line1, line2) {
             const canvas = document.createElement('canvas');
-            canvas.width = 1536;
-            canvas.height = 384;
+            canvas.width = 2048;
+            canvas.height = line2 ? 640 : 400;
             const ctx = canvas.getContext('2d');
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.font = '900 86px "Montserrat", "Zen Maru Gothic", sans-serif';
-            ctx.letterSpacing = '8px';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
 
-            const cx = 768;
-            const cy = 192;
+            function drawLine(text, y) {
+                ctx.font = '900 110px "Montserrat", "Zen Maru Gothic", sans-serif';
+                ctx.letterSpacing = '6px';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
 
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.50)';
-            ctx.shadowBlur = 24;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 8;
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
+                ctx.shadowBlur = 28;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 10;
+                ctx.lineWidth = 22;
+                ctx.strokeStyle = '#ffffff';
+                ctx.strokeText(text, 1024, y);
 
-            ctx.lineWidth = 18;
-            ctx.strokeStyle = '#ffffff';
-            ctx.strokeText(text, cx, cy);
+                ctx.shadowBlur = 0;
+                const grad = ctx.createLinearGradient(0, y - 70, 0, y + 70);
+                grad.addColorStop(0, '#ffffff');
+                grad.addColorStop(0.35, '#ff66b2');
+                grad.addColorStop(1, '#ff0066');
+                ctx.fillStyle = grad;
+                ctx.fillText(text, 1024, y);
+            }
 
-            ctx.shadowBlur = 0;
-
-            const grad = ctx.createLinearGradient(0, 80, 0, 300);
-            grad.addColorStop(0, '#ffffff');
-            grad.addColorStop(0.35, '#ff66b2');
-            grad.addColorStop(1, '#ff0066');
-
-            ctx.fillStyle = grad;
-            ctx.fillText(text, cx, cy);
+            if (line2) {
+                drawLine(line1, 220);
+                drawLine(line2, 420);
+            } else {
+                drawLine(line1, 200);
+            }
 
             const texture = new THREE.CanvasTexture(canvas);
             texture.minFilter = THREE.LinearFilter;
             return { texture, aspect: canvas.width / canvas.height };
         }
 
-        const introSentences = [
-            { text: "Thank You For Choosing Me", z: 4.0, height: 2.2 },
-            { text: "I Love You", z: -8.0, height: 2.6 },
-            { text: "You Are My Whole World Now", z: -20.0, height: 2.2 }
-        ].map(item => {
-            const { texture, aspect } = createFullSentenceTexture(item.text);
+        const INTRO_SENTENCES_DEF = [
+            { line1: "Thank You For", line2: "Choosing Me",     z: 18.0, height: 4.2 },
+            { line1: "I Love You",    line2: null,               z:  4.0, height: 4.8 },
+            { line1: "You Are My",   line2: "Whole World Now",  z: -12.0, height: 4.2 }
+        ];
+
+        const introSentences = INTRO_SENTENCES_DEF.map(item => {
+            const { texture, aspect } = createFullSentenceTexture(item.line1, item.line2);
             const width = item.height * aspect;
             const mat = new THREE.MeshBasicMaterial({
                 map: texture,
@@ -1111,7 +1117,9 @@
                 depthWrite: false
             });
             const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, item.height), mat);
-            mesh.position.set(0.0, 2.2, item.z);
+            // All sentences are visible and placed at fixed 3D world positions from the start
+            mesh.position.set(0.0, 2.6, item.z);
+            mesh.visible = true;
             scene.add(mesh);
             return { mesh, mat, z: item.z };
         });
@@ -2215,19 +2223,27 @@
                 sun1.visible = sun1Opacity > 0.01;
             }
 
-            // 3 Intro Full Sentence Planes Opacity & Fade
+            // 3 Intro Sentence Planes: always visible from afar, fade as camera passes through
+            // Only hide them once the song lyrics begin (t >= 14.5)
             introSentences.forEach(item => {
-                const dist = camera.position.z - item.z;
-                if (dist > 18.0 || dist < -3.0) {
+                if (curAudioTime >= 14.5) {
                     item.mesh.visible = false;
-                } else if (dist <= 18.0 && dist > 2.2) {
+                    return;
+                }
+                const dist = camera.position.z - item.z; // positive = camera is ahead of (behind) plane
+                if (dist < -4.0) {
+                    // Camera already passed through — hide
+                    item.mesh.visible = false;
+                } else {
                     item.mesh.visible = true;
-                    item.mat.opacity = 1.0;
-                } else if (dist <= 2.2 && dist >= -3.0) {
-                    // Smooth fade as camera passes straight through the text plane
-                    item.mesh.visible = true;
-                    const fade = Math.max(0.0, (dist - (-3.0)) / 5.2);
-                    item.mat.opacity = fade * fade;
+                    if (dist >= 1.5) {
+                        // Camera still approaching — fully visible
+                        item.mat.opacity = 1.0;
+                    } else {
+                        // Camera passing through — smooth fade out
+                        const fade = Math.max(0.0, (dist + 4.0) / 5.5);
+                        item.mat.opacity = fade * fade;
+                    }
                 }
             });
 
