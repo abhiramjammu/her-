@@ -1083,10 +1083,16 @@
         if (pagoda.material) pagoda.material.depthWrite = false;
         multiplaneGroup.add(pagoda);
 
-        const house4 = createBillboard('assets/house_country_minka.png?v=5', 14.5, 14.5);
-        house4.position.set(0.0, 5.4, -159.0);
+        const house4 = createBillboard('assets/house_country_minka.png?v=6', 14.5, 14.5);
+        house4.position.set(0.0, 3.8, -159.0);
         if (house4.material) house4.material.depthWrite = false;
         multiplaneGroup.add(house4);
+
+        // Ground contact shadow for house4 to sit firmly grounded on road
+        const shHouse4 = new THREE.Mesh(new THREE.PlaneGeometry(12.0, 4.5), shadowMat);
+        shHouse4.rotation.x = -Math.PI / 2;
+        shHouse4.position.set(0.0, -1.33, -159.0);
+        multiplaneGroup.add(shHouse4);
 
         // Hanging Japanese Red Chochin Paper Lanterns (Z reduced to -132.5)
         const chochinLeft = createBillboard('assets/japanese_chochin_lantern.png', 2.2, 2.4);
