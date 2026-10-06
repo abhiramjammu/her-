@@ -1000,16 +1000,41 @@
             scene.add(moonLight);
         })();
 
+        // EXPANSIVE SEASIDE BEACH SAND TERRAIN (Left, Right & Road Center for "Walkin' In The Sand")
+        const sandMat = new THREE.MeshStandardMaterial({ color: 0xffd6e0, roughness: 0.88, metalness: 0.05 });
+
+        // Center sand dune along road
+        const duneCenter = new THREE.Mesh(new THREE.PlaneGeometry(24, 26), sandMat);
+        duneCenter.rotation.x = -Math.PI / 2;
+        duneCenter.position.set(0, -1.32, -105.0);
+
+        // Left side expansive beach dune
+        const duneLeft = new THREE.Mesh(new THREE.PlaneGeometry(32, 28), sandMat);
+        duneLeft.rotation.x = -Math.PI / 2;
+        duneLeft.position.set(-18.0, -1.31, -105.0);
+
+        // Right side expansive beach dune
+        const duneRight = new THREE.Mesh(new THREE.PlaneGeometry(32, 28), sandMat);
+        duneRight.rotation.x = -Math.PI / 2;
+        duneRight.position.set(18.0, -1.31, -105.0);
+
+        // Organic sand mounds on flanks
+        const moundLeft = new THREE.Mesh(new THREE.SphereGeometry(6.5, 16, 12), sandMat);
+        moundLeft.scale.set(1.8, 0.22, 1.2);
+        moundLeft.position.set(-12.5, -1.33, -104.0);
+
+        const moundRight = new THREE.Mesh(new THREE.SphereGeometry(6.5, 16, 12), sandMat);
+        moundRight.scale.set(1.8, 0.22, 1.2);
+        moundRight.position.set(12.5, -1.33, -104.0);
+
         const lake = new THREE.Mesh(
-            new THREE.PlaneGeometry(20, 22),
+            new THREE.PlaneGeometry(36, 20),
             new THREE.MeshPhysicalMaterial({ color: 0x00f5d4, transmission: 0.85, roughness: 0.08, transparent: true, opacity: 0.82 })
         );
         lake.rotation.x = -Math.PI / 2;
-        lake.position.set(0, -1.30, -112.0);
-        const dune = new THREE.Mesh(new THREE.PlaneGeometry(16, 10), new THREE.MeshStandardMaterial({ color: 0xffd1dc, roughness: 0.85 }));
-        dune.rotation.x = -Math.PI / 2;
-        dune.position.set(0, -1.32, -106.5);
-        multiplaneGroup.add(lake, dune);
+        lake.position.set(0, -1.30, -114.0);
+
+        multiplaneGroup.add(duneCenter, duneLeft, duneRight, moundLeft, moundRight, lake);
 
         const birds3 = createBillboard('assets/birds.png', 16.0, 8.0);
         birds3.position.set(3.5, 9.0, -114.0);
