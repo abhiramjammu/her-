@@ -727,8 +727,10 @@
         // --- 8. HELPER FUNCTIONS & EXACT CHARACTER ASPECT RATIOS ---
         function createBillboard(texPath, width, height) {
             const tex = textureLoader.load(texPath);
+            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+            else if (THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
             tex.minFilter = THREE.LinearFilter;
-            const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, alphaTest: 0.12 });
+            const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, alphaTest: 0.12, toneMapped: false });
             return new THREE.Mesh(new THREE.PlaneGeometry(width, height), mat);
         }
 
@@ -738,26 +740,24 @@
             3: 616 / 934,   // 0.660
             4: 520 / 1002,  // 0.519
             5: 694 / 989,   // 0.702
-            6: 3 / 4,   // 0.709 - Clean spring couple cutout (zero background remnants)
-            7: 527 / 955,   // 0.552 - Clean riverwalk couple cutout
+            6: 3 / 4,       // 0.750
+            7: 527 / 955,   // 0.552
             8: 772 / 1000   // 0.772
         };
 
         function createCharacterOnRoad(id, imgPath, zPos, xPos = 0, height = 5.6) {
-            const aspect = COUPLE_ASPECTS[id] || 0.75;
-            const width = height * aspect;
+            const initialAspect = COUPLE_ASPECTS[id] || 0.75;
+            let width = height * initialAspect;
 
-            const tex = textureLoader.load(imgPath);
-            tex.minFilter = THREE.LinearFilter;
             const mat = new THREE.MeshBasicMaterial({
-                map: tex,
                 transparent: true,
                 side: THREE.DoubleSide,
                 alphaTest: 0.15,
-                depthWrite: true
+                depthWrite: true,
+                toneMapped: false
             });
+
             const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), mat);
-            // Lower Y slightly (-0.32) so car tires and couple feet sit firmly flush touching the road!
             const yOffset = id === 1 ? -0.36 : -0.25;
             mesh.position.set(xPos, -1.34 + (height / 2) + yOffset, zPos);
 
@@ -765,6 +765,22 @@
             sh.rotation.x = -Math.PI / 2;
             sh.position.set(xPos, -1.33, zPos);
             multiplaneGroup.add(sh);
+
+            // DYNAMIC UN-STRETCHED ASPECT RATIO ADJUSTMENT FROM LOADED IMAGE DIMENSIONS
+            const tex = textureLoader.load(imgPath, (t) => {
+                if (t.image && t.image.width && t.image.height) {
+                    const actualAspect = t.image.width / t.image.height;
+                    const correctW = height * actualAspect;
+                    mesh.geometry.dispose();
+                    mesh.geometry = new THREE.PlaneGeometry(correctW, height);
+                    sh.geometry.dispose();
+                    sh.geometry = new THREE.PlaneGeometry(correctW * 0.92, height * 0.32);
+                }
+            });
+            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+            else if (THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
+            tex.minFilter = THREE.LinearFilter;
+            mat.map = tex;
 
             mesh.userData.noFade = true; // COUPLE IMAGES NEVER FADE OUT OR IN!
             multiplaneGroup.add(mesh);
