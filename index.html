@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Girl Made In Japan - 3D Kinetic Typographic Showcase</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Zen+Maru+Gothic:wght@900&display=swap');
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #fff5f7;
+            font-family: 'Montserrat', 'Zen Maru Gothic', sans-serif;
+            user-select: none;
+        }
+
+        #ui {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background: rgba(255, 245, 247, 0.40);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            cursor: pointer;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+        }
+
+        .title-badge {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            color: #ff007f;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            padding: 8px 26px;
+            background: rgba(255, 0, 127, 0.08);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 0, 127, 0.25);
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.15);
+        }
+
+        h1 {
+            color: #ff007f;
+            font-size: clamp(32px, 5.2vw, 68px);
+            font-weight: 900;
+            letter-spacing: 5px;
+            margin: 0 0 10px 0;
+            text-shadow: 0 15px 40px rgba(255, 0, 127, 0.35);
+            text-align: center;
+        }
+        h1 span { color: #5a189a; }
+
+        .subtitle {
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 3.5px;
+            color: #7b2cbf;
+            margin-bottom: 36px;
+            text-transform: uppercase;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff007f, #9d4edd);
+            color: #fff;
+            border: none;
+            padding: 16px 36px;
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 12px 30px rgba(255, 0, 127, 0.40);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 16px 36px rgba(255, 0, 127, 0.55);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.85);
+            color: #7b2cbf;
+            border: 2px solid rgba(123, 44, 191, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+        .btn-secondary:hover {
+            background: #fff;
+            color: #ff007f;
+            border-color: #ff007f;
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            padding: 10px 22px;
+            border-radius: 40px;
+            box-shadow: 0 10px 32px rgba(255, 0, 127, 0.18);
+            border: 1px solid rgba(255, 0, 127, 0.22);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        #controls.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: #5a189a;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .ctrl-btn:hover {
+            color: #ff007f;
+            transform: scale(1.15);
+            background: rgba(255, 0, 127, 0.08);
+        }
+        .ctrl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+
+        .time-display {
+            font-size: 13px;
+            font-weight: 800;
+            color: #5a189a;
+            letter-spacing: 1px;
+            min-width: 82px;
+            text-align: center;
+        }
+
+        #scrubber {
+            -webkit-appearance: none;
+            appearance: none;
+            width: clamp(140px, 20vw, 260px);
+            height: 6px;
+            background: rgba(123, 44, 191, 0.18);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+        #scrubber::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff007f, #9d4edd);
+            box-shadow: 0 2px 8px rgba(255, 0, 127, 0.4);
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        #scrubber::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+        }
+
+        #replayModal {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center; align-items: center;
+            background: rgba(255, 245, 247, 0.40);
+            backdrop-filter: blur(8px);
+            z-index: 210;
+        }
+        #replayModal.active { display: flex; }
+    </style>
+    <script>
+        window.__appReady = false;
+        window.__pendingStartSec = null;
+        function handleStartClick(sec) {
+            const ui = document.getElementById('ui');
+            if (ui) {
+                ui.style.display = 'none';
+            }
+            if (window.__appReady && window.__startExperience) {
+                window.__startExperience(sec);
+            } else {
+                window.__pendingStartSec = sec;
+            }
+        }
+    </script>
+</head>
+<body>
+    <audio id="audio" src="song.mp3" preload="auto"></audio>
+
+    <div id="ui">
+        <div class="title-badge">Buck Owens &bull; 1964 Iconic Country</div>
+        <h1>The Girl Made <span>In Japan</span></h1>
+        <div class="subtitle">3D Kinetic Typographic Showcase</div>
+        <div class="btn-group">
+            <button class="btn" id="playBtn" onclick="handleStartClick(15.0);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                Start Experience (0:15)
+            </button>
+            <button class="btn btn-secondary" id="playIntroBtn" onclick="handleStartClick(0.0);">
+                Play From Beginning (0:00)
+            </button>
+        </div>
+    </div>
+
+    <div id="controls">
+        <button class="ctrl-btn" id="btnPlayPause" title="Play/Pause (Space)">
+            <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="btnBack5" title="Rewind 5s">
+            <svg viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.2 3.16-1.98 5.12-1.98 3.88 0 7.07 2.76 7.82 6.42l2.43-.58C21.65 11.75 17.5 8 12.5 8z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="btnFwd5" title="Forward 5s">
+            <svg viewBox="0 0 24 24"><path d="M11.5 8c2.65 0 5.05.99 6.9 2.6L22 7v9h-9l3.62-3.62c-1.39-1.2-3.16-1.98-5.12-1.98-3.88 0-7.07 2.76-7.82 6.42l-2.43-.58C2.35 11.75 6.5 8 11.5 8z"/></svg>
+        </button>
+        <span class="time-display" id="timeDisplay">0:15 / 1:14</span>
+        <input type="range" id="scrubber" min="0" max="74" step="0.05" value="15">
+        <canvas id="vizCanvas" width="100" height="28"></canvas>
+        <button class="ctrl-btn" id="btnMute" title="Mute/Unmute">
+            <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="btnFullscreen" title="Fullscreen">
+            <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        </button>
+    </div>
+
+    <div id="replayModal">
+        <h1>Thank You <span>For Watching</span></h1>
+        <div class="subtitle">The Girl Made In Japan &bull; 3D Showcase Finished</div>
+        <button class="btn" id="btnReplay">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+            Replay Experience
+        </button>
+    </div>
+
+    <script src="assets/three.min.js"></script>
+    <script>
+
+        // --- 1. SCENE & CAMERA SETUP ---
+        const scene = new THREE.Scene();
+        const multiplaneGroup = new THREE.Group();
+        scene.add(multiplaneGroup);
+        // Fog completely removed as requested - crisp, vibrant anime atmosphere
+        // scene.fog = null;
+
+        const camera = new THREE.PerspectiveCamera(54, window.innerWidth / window.innerHeight, 0.1, 1000);
+        window.camera = camera;
+        camera.position.set(0, 1.6, 12);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.15;
+        document.body.appendChild(renderer.domElement);
+
+        // --- 2. RADIANT LIGHTING ---
+        const ambientLight = new THREE.AmbientLight(0xfff0f5, 1.55);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffd1dc, 1.40);
+        dirLight.position.set(15, 25, 20);
+        scene.add(dirLight);
+
+        const pinkGlow = new THREE.PointLight(0xff007f, 3.2, 55);
+        pinkGlow.position.set(0, 3.5, 0);
+        scene.add(pinkGlow);
+
+        const violetGlow = new THREE.PointLight(0x7b2cbf, 2.8, 55);
+        violetGlow.position.set(0, 3.5, -20);
+        scene.add(violetGlow);
+
+        const followLight = new THREE.PointLight(0xffffff, 2.2, 35);
+        scene.add(followLight);
+
+        // --- 3. SKYDOME & PANORAMIC CYLINDER ---
+        const textureLoader = new THREE.TextureLoader();
+        const skyTex = textureLoader.load('assets/bg_sunset.jpg');
+        skyTex.wrapS = THREE.RepeatWrapping;
+        skyTex.wrapT = THREE.RepeatWrapping;
+
+        // Spherical outer skydome - fixed in world space
+        const skyGeo = new THREE.SphereGeometry(500, 32, 24);
+        const skyMat = new THREE.MeshBasicMaterial({ map: skyTex, side: THREE.BackSide });
+        const skyMesh = new THREE.Mesh(skyGeo, skyMat);
+        skyMesh.position.set(0, 0, -120);
+        scene.add(skyMesh);
+
+        // Curved rounded background cylinder - fixed far backdrop, no longer moves with camera!
+        const bgCylinderGeo = new THREE.CylinderGeometry(350, 350, 180, 48, 1, true);
+        const bgCylinderMat = new THREE.MeshBasicMaterial({
+            map: skyTex,
+            side: THREE.BackSide,
+            fog: false,
+            transparent: true,
+            opacity: 0.94
+        });
+        const bgCylinderMesh = new THREE.Mesh(bgCylinderGeo, bgCylinderMat);
+        bgCylinderMesh.position.set(0, 40, -320);
+        scene.add(bgCylinderMesh);
+
+        // --- 4. COMIC-STYLE SIMPLE CLOUDS IN THE SKY (BEHIND MAIN BIG ROUNDED IMAGE AT BACK) ---
+        // Clean, simple, stylized comic/anime clouds in the sky - completely removed from the highway/characters!
+        const comicCloudTexs = [
+            textureLoader.load('assets/comic_cloud_1.png'),
+            textureLoader.load('assets/comic_cloud_2.png'),
+            textureLoader.load('assets/comic_cloud_3.png')
+        ];
+        const comicCloudMats = comicCloudTexs.map(t => new THREE.MeshBasicMaterial({
+            map: t,
+            color: 0xffcba4,   // warm peach/amber tint like sunset sky clouds
+            transparent: true,
+            opacity: 0.82,
+            side: THREE.DoubleSide,
+            depthWrite: false
+        }));
+
+        const skyCloudsGroup = new THREE.Group();
+        scene.add(skyCloudsGroup);
+
+        const comicCloudMeshes = [];
+
+        // 1. High Sky Backdrop Comic Clouds (Moving synchronously with the big rounded sky cylinder at the back)
+        // Positioned high up in the sky (Y = 28.0 to 48.0) far behind the action, NEVER on the road or behind characters!
+        const skyCloudConfigs = [
+            { x: -55, y: 38, z: -105, w: 28, h: 14, texIdx: 0 },
+            { x: -18, y: 44, z: -115, w: 24, h: 12, texIdx: 1 },
+            { x:  22, y: 42, z: -110, w: 26, h: 13, texIdx: 2 },
+            { x:  58, y: 36, z: -100, w: 30, h: 15, texIdx: 0 },
+            { x: -75, y: 32, z: -95,  w: 22, h: 11, texIdx: 2 },
+            { x:  78, y: 34, z: -98,  w: 24, h: 12, texIdx: 1 },
+            { x:   0, y: 48, z: -125, w: 32, h: 16, texIdx: 0 },
+            { x: -36, y: 35, z: -108, w: 22, h: 11, texIdx: 1 },
+            { x:  38, y: 37, z: -112, w: 25, h: 12.5, texIdx: 2 }
+        ];
+
+        skyCloudConfigs.forEach((cfg, idx) => {
+            const geo = new THREE.PlaneGeometry(cfg.w, cfg.h);
+            const m = new THREE.Mesh(geo, comicCloudMats[cfg.texIdx % comicCloudMats.length]);
+            m.position.set(cfg.x, cfg.y, cfg.z);
+            m.userData = {
+                baseX: cfg.x,
+                driftSpeed: 0.12 + (idx % 3) * 0.05,
+                seed: idx * 1.5
+            };
+            skyCloudsGroup.add(m);
+            comicCloudMeshes.push(m);
+        });
+
+        // 2. Comic Clouds Framing Behind The Main Big Rounded Sun in Diorama 1 & Diorama 6
+        // Placed strictly in the distant sky behind the big round sun (Z = -86m to -90m in Dio 1, and Z = -214m to -218m in Dio 6)
+        const sunBackdropClouds = [
+            // Behind Sun 1 (Sun 1 is at X: 0, Y: 15, Z: -82)
+            { x: -18.0, y: 19.5, z: -86.5, w: 22, h: 11, texIdx: 0 },
+            { x:  17.0, y: 21.0, z: -87.5, w: 20, h: 10, texIdx: 1 },
+            { x:   2.0, y: 25.5, z: -89.0, w: 25, h: 12.5, texIdx: 2 },
+            { x: -32.0, y: 16.5, z: -85.0, w: 18, h: 9, texIdx: 1 },
+            { x:  30.0, y: 17.0, z: -85.5, w: 19, h: 9.5, texIdx: 0 },
+
+            // Behind Sun 6 (Sun 6 is at X: 0, Y: 16, Z: -208)
+            { x: -20.0, y: 22.0, z: -214.0, w: 24, h: 12, texIdx: 1 },
+            { x:  19.0, y: 23.5, z: -215.5, w: 22, h: 11, texIdx: 2 },
+            { x:   0.0, y: 27.5, z: -217.0, w: 26, h: 13, texIdx: 0 },
+            { x: -34.0, y: 18.0, z: -212.0, w: 19, h: 9.5, texIdx: 0 },
+            { x:  32.0, y: 18.5, z: -213.0, w: 20, h: 10, texIdx: 1 }
+        ];
+
+        sunBackdropClouds.forEach((cfg, idx) => {
+            const geo = new THREE.PlaneGeometry(cfg.w, cfg.h);
+            const m = new THREE.Mesh(geo, comicCloudMats[cfg.texIdx % comicCloudMats.length]);
+            m.position.set(cfg.x, cfg.y, cfg.z);
+            m.userData = {
+                baseX: cfg.x,
+                driftSpeed: 0.15 + (idx % 2) * 0.08,
+                seed: idx * 2.1
+            };
+            multiplaneGroup.add(m);
+            comicCloudMeshes.push(m);
+        });
+
+        // --- 5. GROUND & HIGHWAY ROAD ---
+        const groundTex = textureLoader.load('assets/ground_anime.jpg');
+        groundTex.wrapS = THREE.RepeatWrapping;
+        groundTex.wrapT = THREE.RepeatWrapping;
+        groundTex.repeat.set(12, 72);
+
+        const ground = new THREE.Mesh(
+            new THREE.PlaneGeometry(120, 480),
+            new THREE.MeshStandardMaterial({ map: groundTex, color: 0xfffef0, roughness: 0.88, metalness: 0.05 })
+        );
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.set(0, -1.36, -140);
+        scene.add(ground);
+
+        // Center Road (Width: 5.4, X: -2.7 to +2.7)
+        const roadMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(5.4, 480),
+            new THREE.MeshStandardMaterial({ color: 0x1c1028, roughness: 0.35, metalness: 0.50 })
+        );
+        roadMesh.rotation.x = -Math.PI / 2;
+        roadMesh.position.set(0, -1.34, -140);
+        scene.add(roadMesh);
+
+        // Glowing Road Curbs
+        [-2.72, 2.72].forEach(x => {
+            const curb = new THREE.Mesh(
+                new THREE.BoxGeometry(0.12, 0.06, 480),
+                new THREE.MeshBasicMaterial({ color: 0xff007f })
+            );
+            curb.position.set(x, -1.31, -140);
+            scene.add(curb);
+        });
+
+        // Glowing Road Dashes along center line
+        for (let z = 20; z >= -300; z -= 7) {
+            const dash = new THREE.Mesh(
+                new THREE.PlaneGeometry(0.16, 3.6),
+                new THREE.MeshBasicMaterial({ color: 0xba68c8, side: THREE.DoubleSide })
+            );
+            dash.rotation.x = -Math.PI / 2;
+            dash.position.set(0, -1.33, z);
+            scene.add(dash);
+        }
+
+        // --- 6. FALLING PETALS & GOLDEN LEAF PARTICLES ---
+        const leafTexPaths = ['assets/petal_pink.png', 'assets/petal_violet.png', 'assets/leaf_gold.png'];
+        const leafMaterials = leafTexPaths.map(p => {
+            const t = textureLoader.load(p);
+            t.minFilter = THREE.LinearFilter;
+            return new THREE.MeshBasicMaterial({ map: t, transparent: true, side: THREE.DoubleSide, depthWrite: false });
+        });
+
+        const leafParticles = [];
+        const LEAF_COUNT = 180;
+        const leafGeo = new THREE.PlaneGeometry(0.55, 0.55);
+
+        for (let i = 0; i < LEAF_COUNT; i++) {
+            const m = leafMaterials[i % leafMaterials.length];
+            const mesh = new THREE.Mesh(leafGeo, m);
+            const side = Math.random() > 0.5 ? 1 : -1;
+            mesh.position.set(
+                side * (3.8 + Math.random() * 16),
+                Math.random() * 18 + 0.5,
+                (Math.random() - 0.5) * 340 - 100
+            );
+            mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+            mesh.userData = {
+                fallSpeed: 0.03 + Math.random() * 0.045,
+                swayFreq: 1.2 + Math.random() * 2.0,
+                driftSpeed: (Math.random() - 0.5) * 0.015,
+                rotSpeedX: (Math.random() - 0.5) * 0.04,
+                rotSpeedY: (Math.random() - 0.5) * 0.04,
+                side: side
+            };
+            scene.add(mesh);
+            leafParticles.push(mesh);
+        }
+
+        // --- 6B. SAKURA CHERRY BLOSSOM & GOLDEN LEAF FALLING BURST (Diorama 6 "Cherry Blossoms") ---
+        const sakuraTextures = (function generateSakuraTextures() {
+            // 1. Sakura Flower Texture (5 Pink Petals with Yellow/Hot-Pink Center)
+            const c1 = document.createElement('canvas'); c1.width = 128; c1.height = 128;
+            const ctx1 = c1.getContext('2d');
+            for (let i = 0; i < 5; i++) {
+                const angle = (i * Math.PI * 2) / 5 - Math.PI / 2;
+                ctx1.save();
+                ctx1.translate(64, 64);
+                ctx1.rotate(angle);
+                const g = ctx1.createRadialGradient(0, -20, 2, 0, -20, 26);
+                g.addColorStop(0, '#ffffff');
+                g.addColorStop(0.35, '#ffb7d5');
+                g.addColorStop(1, '#ff1493');
+                ctx1.fillStyle = g;
+                ctx1.beginPath();
+                ctx1.moveTo(0, 0);
+                ctx1.bezierCurveTo(-16, -18, -14, -42, 0, -48);
+                ctx1.bezierCurveTo(14, -42, 16, -18, 0, 0);
+                ctx1.fill();
+                ctx1.restore();
+            }
+            ctx1.beginPath(); ctx1.arc(64, 64, 9, 0, Math.PI * 2); ctx1.fillStyle = '#ff007f'; ctx1.fill();
+            ctx1.beginPath(); ctx1.arc(64, 64, 4.5, 0, Math.PI * 2); ctx1.fillStyle = '#fff066'; ctx1.fill();
+            const texFlower = new THREE.CanvasTexture(c1);
+
+            // 2. Sakura Petal Texture (Soft Pink Teardrop)
+            const c2 = document.createElement('canvas'); c2.width = 64; c2.height = 64;
+            const ctx2 = c2.getContext('2d');
+            const g2 = ctx2.createRadialGradient(32, 20, 2, 32, 32, 28);
+            g2.addColorStop(0, '#ffffff');
+            g2.addColorStop(0.5, '#ff80bf');
+            g2.addColorStop(1, '#ff007f');
+            ctx2.fillStyle = g2;
+            ctx2.beginPath(); ctx2.moveTo(32, 6);
+            ctx2.bezierCurveTo(10, 18, 12, 50, 32, 58);
+            ctx2.bezierCurveTo(52, 50, 54, 18, 32, 6);
+            ctx2.fill();
+            const texPetal = new THREE.CanvasTexture(c2);
+
+            // 3. Golden Leaf Texture (Luminous Amber/Gold)
+            const c3 = document.createElement('canvas'); c3.width = 64; c3.height = 64;
+            const ctx3 = c3.getContext('2d');
+            const g3 = ctx3.createLinearGradient(0, 0, 64, 64);
+            g3.addColorStop(0, '#ffeb3b');
+            g3.addColorStop(0.5, '#ffa726');
+            g3.addColorStop(1, '#f57c00');
+            ctx3.fillStyle = g3;
+            ctx3.beginPath(); ctx3.moveTo(32, 4);
+            ctx3.quadraticCurveTo(58, 32, 32, 60);
+            ctx3.quadraticCurveTo(6, 32, 32, 4);
+            ctx3.fill();
+            const texLeaf = new THREE.CanvasTexture(c3);
+
+            return [texFlower, texPetal, texLeaf];
+        })();
+
+        const sakuraMaterials = sakuraTextures.map(tex => new THREE.MeshBasicMaterial({
+            map: tex,
+            transparent: true,
+            side: THREE.DoubleSide,
+            depthWrite: false
+        }));
+
+        const sakuraBurstParticles = [];
+        const SAKURA_COUNT = 180;
+        for (let i = 0; i < SAKURA_COUNT; i++) {
+            const mat = sakuraMaterials[i % sakuraMaterials.length];
+            const size = (i % 3 === 0) ? 0.78 : 0.48;
+            const mesh = new THREE.Mesh(new THREE.PlaneGeometry(size, size), mat);
+            mesh.position.set(
+                (Math.random() - 0.5) * 28.0,
+                Math.random() * 22.0 + 2.0,
+                -162.0 - Math.random() * 44.0
+            );
+            mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+            mesh.userData = {
+                baseY: mesh.position.y,
+                fallSpeed: 0.035 + Math.random() * 0.05,
+                swayFreq: 1.5 + Math.random() * 2.5,
+                swayAmp: 0.02 + Math.random() * 0.03,
+                rotX: (Math.random() - 0.5) * 0.05,
+                rotY: (Math.random() - 0.5) * 0.05,
+                rotZ: (Math.random() - 0.5) * 0.05,
+                seed: Math.random() * Math.PI * 2
+            };
+            scene.add(mesh);
+            sakuraBurstParticles.push(mesh);
+        }
+
+        // --- 6B. SNOW PARTICLES FOR SENTENCE 2 (20.0s - 29.5s) ---
+        const snowParticles = [];
+        const SNOW_COUNT = 220;
+        const snowMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, depthWrite: false });
+        const snowGeo = new THREE.SphereGeometry(0.12, 6, 6);
+        for (let i = 0; i < SNOW_COUNT; i++) {
+            const mesh = new THREE.Mesh(snowGeo, snowMat);
+            mesh.position.set(
+                (Math.random() - 0.5) * 26.0,
+                Math.random() * 20.0 + 1.0,
+                -70.0 - Math.random() * 28.0
+            );
+            mesh.userData = {
+                fallSpeed: 0.04 + Math.random() * 0.05,
+                swayFreq: 1.5 + Math.random() * 2.0,
+                swayAmp: 0.02 + Math.random() * 0.03,
+                seed: Math.random() * Math.PI * 2
+            };
+            scene.add(mesh);
+            snowParticles.push(mesh);
+        }
+
+        // --- 6C. FIRE BALLOONS FOR MADE IN JAPAN (37.0s - 44.5s) ---
+        const fireBalloons = [];
+        const FIRE_BALLOON_COUNT = 24;
+        for (let i = 0; i < FIRE_BALLOON_COUNT; i++) {
+            const balloonMesh = createBillboard('assets/lantern_warm.png', 2.2, 2.4);
+            balloonMesh.position.set(
+                (Math.random() - 0.5) * 32.0,
+                1.5 + Math.random() * 14.0,
+                -118.0 - Math.random() * 26.0
+            );
+            balloonMesh.userData = {
+                riseSpeed: 0.03 + Math.random() * 0.04,
+                swayFreq: 1.0 + Math.random() * 1.5,
+                swayAmp: 0.015 + Math.random() * 0.02,
+                seed: Math.random() * Math.PI * 2
+            };
+            scene.add(balloonMesh);
+            fireBalloons.push(balloonMesh);
+        }
+
+        // --- 6D. PINK, GOLD & SILVER HOVERING CUBES FOR DREAMS (44.8s - 51.5s) ---
+        const pinkGoldSilverCubes = [];
+        const CUBE_COUNT = 45;
+        const cubeColors = [0xff66b2, 0xffd700, 0xe0e0e0]; // Pink, Gold, Silver
+        const cubeMaterials = cubeColors.map(c => new THREE.MeshStandardMaterial({
+            color: c,
+            metalness: 0.85,
+            roughness: 0.15,
+            emissive: c,
+            emissiveIntensity: 0.25
+        }));
+        const cubeGeo = new THREE.BoxGeometry(0.40, 0.40, 0.40);
+        for (let i = 0; i < CUBE_COUNT; i++) {
+            const mat = cubeMaterials[i % cubeMaterials.length];
+            const mesh = new THREE.Mesh(cubeGeo, mat);
+            mesh.position.set(
+                (Math.random() - 0.5) * 28.0,
+                1.0 + Math.random() * 12.0,
+                -146.0 - Math.random() * 22.0
+            );
+            mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+            mesh.userData = {
+                baseY: mesh.position.y,
+                rotX: (Math.random() - 0.5) * 0.04,
+                rotY: (Math.random() - 0.5) * 0.04,
+                rotZ: (Math.random() - 0.5) * 0.04,
+                floatFreq: 1.2 + Math.random() * 1.8,
+                floatAmp: 0.20 + Math.random() * 0.30,
+                seed: Math.random() * Math.PI * 2
+            };
+            scene.add(mesh);
+            pinkGoldSilverCubes.push(mesh);
+        }
+
+        // --- 7. HIGHWAY TREES: LUSH & CLOSE TO ROAD LIKE EARLIER GENERATION ---
+        // Beautiful close tree canopy lining the highway boulevard (X = 6.8 & 11.6), perfectly clear of road & text!
+        const treeTexPaths = [
+            'assets/tree.png',
+            'assets/tree_bonsai.png',
+            'assets/tree_golden.png',
+            'assets/tree_violet.png',
+            'assets/tree_magenta.png'
+        ];
+        const treeMaterials = treeTexPaths.map(p => {
+            const t = textureLoader.load(p);
+            t.minFilter = THREE.LinearFilter;
+            return new THREE.MeshBasicMaterial({ map: t, transparent: true, side: THREE.DoubleSide, alphaTest: 0.20, depthWrite: false });
+        });
+
+        const shadowTex = textureLoader.load('assets/shadow_decal.png');
+        const shadowMat = new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, opacity: 0.75, depthWrite: false });
+
+        // multiplaneGroup declared at top of scene
+
+        const stationZCenters = [-56.7, -83.6, -104.0, -129.8, -156.0, -180.7, -208.0, -234.2];
+        const treeSwayGroups = [];
+
+        for (let z = 16; z >= -280; z -= 5.0) {
+            let isNearStation = false;
+            for (let s = 0; s < stationZCenters.length; s++) {
+                if (Math.abs(z - stationZCenters[s]) < 11.0) {
+                    isNearStation = true;
+                    break;
+                }
+            }
+
+            // Close, lush tree avenue flanking the highway
+            const xInnerBase = isNearStation ? 11.2 : 6.8;
+            const xOuterBase = isNearStation ? 16.2 : 11.6;
+
+            [-1, 1].forEach((side) => {
+                const count = isNearStation ? 1 : 2;
+                [xInnerBase, xOuterBase].slice(0, count).forEach((xBase, r) => {
+                    const s = (r === 0 ? 6.8 : 8.8) + Math.sin(z * 0.35 + r) * 0.7;
+                    const h = s * 1.10;
+                    const xPos = side * (xBase + Math.sin(z * 0.6 + r) * 0.4);
+                    const zPos = z + (Math.cos(z * 0.25) * 1.2);
+                    const treeSeed = Math.abs(Math.sin(z * 12.9898 + side * 78.233 + r * 37.719) * 43758.5453);
+                    const mIdx = Math.floor(treeSeed) % treeMaterials.length;
+
+                    const shMesh = new THREE.Mesh(new THREE.PlaneGeometry(s * 0.75, s * 0.35), shadowMat);
+                    shMesh.rotation.x = -Math.PI / 2;
+                    shMesh.position.set(xPos, -1.33, zPos);
+                    scene.add(shMesh);
+
+                    const tg = new THREE.Group();
+                    tg.position.set(xPos, -1.34, zPos);
+                    tg.userData = { swaySeed: z * 0.2 + side * 1.5 + r };
+
+                    const p1 = new THREE.Mesh(new THREE.PlaneGeometry(s, h), treeMaterials[mIdx]);
+                    p1.position.y = h / 2;
+                    p1.scale.x = (side === -1) ? ((treeSeed % 2 > 1.0) ? 1 : -1) : ((treeSeed % 2 > 1.0) ? -1 : 1);
+                    tg.add(p1);
+
+                    const p2 = new THREE.Mesh(new THREE.PlaneGeometry(s, h), treeMaterials[mIdx]);
+                    p2.position.y = h / 2;
+                    p2.rotation.y = -side * (Math.PI / 3);
+                    tg.add(p2);
+
+                    multiplaneGroup.add(tg);
+                    treeSwayGroups.push(tg);
+                });
+            });
+        }
+
+        // --- 8. HELPER FUNCTIONS & EXACT CHARACTER ASPECT RATIOS ---
+        function createBillboard(texPath, width, height) {
+            const tex = textureLoader.load(texPath);
+            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+            else if (THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
+            tex.minFilter = THREE.LinearFilter;
+            const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, alphaTest: 0.12, toneMapped: false });
+            return new THREE.Mesh(new THREE.PlaneGeometry(width, height), mat);
+        }
+
+        const COUPLE_ASPECTS = {
+            1: 995 / 971,   // 1.025
+            2: 674 / 1002,  // 0.673
+            3: 616 / 934,   // 0.660
+            4: 520 / 1002,  // 0.519
+            5: 694 / 989,   // 0.702
+            6: 3 / 4,   // 0.709 - Clean spring couple cutout (zero background remnants)
+            7: 527 / 955,   // 0.552 - Clean riverwalk couple cutout
+            8: 772 / 1000   // 0.772
+        };
+
+        function createCharacterOnRoad(id, imgPath, zPos, xPos = 0, height = 5.6) {
+            const aspect = COUPLE_ASPECTS[id] || 0.75;
+            const width = height * aspect;
+
+            const tex = textureLoader.load(imgPath);
+            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+            else if (THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
+            tex.minFilter = THREE.LinearFilter;
+            const mat = new THREE.MeshBasicMaterial({
+                map: tex,
+                transparent: true,
+                side: THREE.DoubleSide,
+                alphaTest: 0.15,
+                depthWrite: true,
+                toneMapped: false
+            });
+            const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), mat);
+            // Lower Y slightly (-0.32) so car tires and couple feet sit firmly flush touching the road!
+            const yOffset = id === 1 ? -0.36 : -0.25;
+            mesh.position.set(xPos, -1.34 + (height / 2) + yOffset, zPos);
+
+            const sh = new THREE.Mesh(new THREE.PlaneGeometry(width * 0.92, height * 0.32), shadowMat);
+            sh.rotation.x = -Math.PI / 2;
+            sh.position.set(xPos, -1.33, zPos);
+            multiplaneGroup.add(sh);
+
+            mesh.userData.noFade = true; // COUPLE IMAGES NEVER FADE OUT OR IN!
+            multiplaneGroup.add(mesh);
+            return mesh;
+        }
+
+        // --- ENTRANCE: AUTHENTIC GEMINI-GENERATED TORII ARCH CUTOUT WITH OPEN WALK-THROUGH PORTAL ---
+        // (Removed artificial cylinder pillars as requested!)
+        const toriiArch = createBillboard('assets/torii_arch_clean.png', 16.5, 16.5);
+        toriiArch.position.set(0, 6.9, 6.0);
+        multiplaneGroup.add(toriiArch);
+
+        const entLightLeft = new THREE.PointLight(0xffaa00, 2.2, 20);
+        entLightLeft.position.set(-4.5, 2.4, 6.0);
+        const entLightRight = new THREE.PointLight(0xffaa00, 2.2, 20);
+        entLightRight.position.set(4.5, 2.4, 6.0);
+        scene.add(entLightLeft, entLightRight);
+
+
+        // --- PURE GRAPHIC YELLOW/ORANGE SUN (fog: false, NEVER GREY!) ---
+        function createGraphicSun(size = 18.0) {
+            const sunGroup = new THREE.Group();
+
+            // 1. Pure Graphic Yellow Core Circle (Unshaded Hex Color)
+            const coreMat = new THREE.MeshBasicMaterial({ color: 0xffd60a, fog: false, depthWrite: false });
+            const coreMesh = new THREE.Mesh(new THREE.CircleGeometry(size * 0.42, 48), coreMat);
+            coreMesh.position.z = 0.02;
+            sunGroup.add(coreMesh);
+
+            // 2. Vivid Sunset Amber Mid-Ring
+            const midMat = new THREE.MeshBasicMaterial({ color: 0xff9f1c, fog: false, depthWrite: false });
+            const midMesh = new THREE.Mesh(new THREE.CircleGeometry(size * 0.52, 48), midMat);
+            midMesh.position.z = 0.01;
+            sunGroup.add(midMesh);
+
+            // 3. Radiant Sunset Orange Outer Corona
+            const coronaTex = textureLoader.load('assets/sun_graphic.png');
+            const coronaMat = new THREE.MeshBasicMaterial({ map: coronaTex, transparent: true, fog: false, depthWrite: false });
+            const coronaMesh = new THREE.Mesh(new THREE.PlaneGeometry(size * 1.35, size * 1.35), coronaMat);
+            sunGroup.add(coronaMesh);
+
+            return sunGroup;
+        }
+
+        // --- VOLUMETRIC 3D STREET LAMPS (Truly Present in 3D Space) ---
+        function createVolumetricLamp(x, z, lampIdx) {
+            const lampGroup = new THREE.Group();
+            lampGroup.position.set(x, -1.34, z);
+
+            const lampH = 7.0;
+            const lampW = lampH * 0.247;
+            const lampTex = textureLoader.load('assets/street_light.png');
+            const lampMat = new THREE.MeshBasicMaterial({
+                map: lampTex,
+                transparent: true,
+                side: THREE.DoubleSide,
+                alphaTest: 0.15,
+                depthWrite: true
+            });
+
+            // Two intersecting planes for full 3D cross-volume
+            const p1 = new THREE.Mesh(new THREE.PlaneGeometry(lampW, lampH), lampMat);
+            p1.position.y = lampH / 2;
+            lampGroup.add(p1);
+
+            const p2 = new THREE.Mesh(new THREE.PlaneGeometry(lampW, lampH), lampMat);
+            p2.position.y = lampH / 2;
+            p2.rotation.y = Math.PI / 2;
+            lampGroup.add(p2);
+
+            // Solid 3D Cast-Iron Base Pedestal on the sidewalk
+            const pedestal = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.32, 0.44, 0.35, 12),
+                new THREE.MeshStandardMaterial({ color: 0x12081f, roughness: 0.4, metalness: 0.8 })
+            );
+            pedestal.position.y = 0.175;
+            lampGroup.add(pedestal);
+
+            // Glowing Gaslight Lantern Core at top
+            const bulb = new THREE.Mesh(
+                new THREE.SphereGeometry(0.20, 12, 12),
+                new THREE.MeshBasicMaterial({ color: 0xffe066, fog: false })
+            );
+            bulb.position.y = lampH * 0.88;
+            lampGroup.add(bulb);
+
+            // Ground Contact Shadow
+            const sh = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 1.9), shadowMat);
+            sh.rotation.x = -Math.PI / 2;
+            sh.position.set(x, -1.33, z);
+            multiplaneGroup.add(sh);
+
+            // Gaslight PointLight
+            const light = new THREE.PointLight(0xffb703, 2.4, 18);
+            light.position.set(x, -1.34 + lampH * 0.88, z);
+            scene.add(light);
+            lampGroup.userData = { light, lampIdx };
+
+            multiplaneGroup.add(lampGroup);
+            return lampGroup;
+        }
+
+
+        // =========================================================================
+        // 9. MULTI-LAYER 3D DEPTH DIORAMAS
+        // =========================================================================
+        const coupleMeshes = [];
+
+        // --- DIORAMA 1 (Sentence 1: Z = -56.7) - RADIO, GROUNDED CAR & GRAPHIC SUN ---
+        const c1 = createCharacterOnRoad(1, 'assets/couple_1_tight.png', -56.7, -0.6);
+        coupleMeshes.push(c1);
+
+        // Standalone vintage car removed per user request (couple stays on road)
+        // Vintage Elements: Left side - gramophone/record player, Right side - vintage suitcase + globe
+
+        // (Removed half-cropped radio props)
+
+        // Right side: vintage street post with hanging sign
+        const vintagePost1 = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.06, 0.06, 3.8, 8),
+            new THREE.MeshStandardMaterial({ color: 0x8b5e3c, roughness: 0.7, metalness: 0.2 })
+        );
+        vintagePost1.position.set(4.2, -1.34 + 1.9, -53.0);
+        multiplaneGroup.add(vintagePost1);
+
+        const signBoard = new THREE.Mesh(
+            new THREE.BoxGeometry(1.4, 0.55, 0.06),
+            new THREE.MeshStandardMaterial({ color: 0xf5deb3, roughness: 0.8 })
+        );
+        signBoard.position.set(4.2, -1.34 + 3.4, -53.0);
+        multiplaneGroup.add(signBoard);
+
+        // Vintage lantern on a post - right side behind couple
+        const lampPost2 = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.05, 0.05, 4.2, 8),
+            new THREE.MeshStandardMaterial({ color: 0x4a3728, roughness: 0.6, metalness: 0.3 })
+        );
+        lampPost2.position.set(5.0, -1.34 + 2.1, -59.0);
+        multiplaneGroup.add(lampPost2);
+
+        const vintLantern = new THREE.Mesh(
+            new THREE.SphereGeometry(0.22, 10, 10),
+            new THREE.MeshBasicMaterial({ color: 0xffcc44 })
+        );
+        vintLantern.position.set(5.0, -1.34 + 4.2, -59.0);
+        multiplaneGroup.add(vintLantern);
+        const vintLampLight = new THREE.PointLight(0xffb703, 1.8, 12);
+        vintLampLight.position.set(5.0, -1.34 + 4.2, -59.0);
+        scene.add(vintLampLight);
+
+        // Left side - decorative flower stand
+        const flowerPost = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.12, 0.18, 0.9, 8),
+            new THREE.MeshStandardMaterial({ color: 0x6d4c1f, roughness: 0.75 })
+        );
+        flowerPost.position.set(-4.8, -1.34 + 0.45, -61.0);
+        multiplaneGroup.add(flowerPost);
+
+        const flowerTop = new THREE.Mesh(
+            new THREE.SphereGeometry(0.55, 10, 8),
+            new THREE.MeshBasicMaterial({ color: 0xff6eb4 })
+        );
+        flowerTop.position.set(-4.8, -1.34 + 1.45, -61.0);
+        multiplaneGroup.add(flowerTop);
+
+        const radioRings = [];
+        for (let i = 0; i < 5; i++) {
+            const ring = new THREE.Mesh(
+                new THREE.TorusGeometry(0.45, 0.035, 16, 36),
+                new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? 0xff007f : 0x7b2cbf, transparent: true, opacity: 0.9 })
+            );
+            ring.position.set(-3.9, 0.9, -58.5);
+            multiplaneGroup.add(ring);
+            radioRings.push(ring);
+        }
+
+        // PURE GRAPHIC SUN 1 (smaller, right behind couple 1 at Z=-56.7)
+        const sun1 = createGraphicSun(13.0);
+        sun1.position.set(0, 15.0, -67.0);
+        multiplaneGroup.add(sun1);
+        const sunLight1 = new THREE.PointLight(0xffa500, 2.4, 60);
+        sunLight1.position.set(0, 15.0, -63.0);
+        scene.add(sunLight1);
+
+
+        // --- DIORAMA 2 (Sentence 2: Z = -83.6) - 10 VOLUMETRIC 3D STREET LAMPS ---
+        const c2 = createCharacterOnRoad(2, 'assets/couple_2_tight.png', -83.6, 0.6);
+        coupleMeshes.push(c2);
+
+        // 10 Volumetric Street Lamps (5 on Left @ X=-3.8, 5 on Right @ X=+3.8)
+        const volumetricLamps = [];
+        const lampZPositions = [-72.0, -77.5, -83.0, -88.5, -94.0];
+        lampZPositions.forEach((lz, lIdx) => {
+            [-3.8, 3.8].forEach(lx => {
+                const lampG = createVolumetricLamp(lx, lz, lIdx);
+                volumetricLamps.push(lampG);
+            });
+        });
+
+        const birds2 = createBillboard('assets/birds.png', 16.0, 8.0);
+        birds2.position.set(-3.5, 7.5, -92.6);
+        multiplaneGroup.add(birds2);
+
+
+        // --- DIORAMA 3 (Sentence 3: Z = -104.0) - SUMMER BEACH & UMBRELLA ---
+        const c3 = createCharacterOnRoad(3, 'assets/couple_3_tight.png', -104.0, -0.6);
+        coupleMeshes.push(c3);
+
+        const umbrella = createBillboard('assets/beach_umbrella.png', 6.2, 6.2);
+        umbrella.position.set(3.8, 1.76, -105.0);
+        multiplaneGroup.add(umbrella);
+
+        // Luminous AI Pink Moon (50% Larger: 16.5 x 16.5, Feathered Glow, Zero Background)
+        (function addMoon() {
+            const pinkMoonTex = textureLoader.load('assets/ai_pink_moon_glowing.png');
+            pinkMoonTex.minFilter = THREE.LinearFilter;
+            const pinkMoonMat = new THREE.MeshBasicMaterial({
+                map: pinkMoonTex,
+                transparent: true,
+                side: THREE.DoubleSide,
+                depthWrite: false,
+                fog: false
+            });
+            // Positioned at X=-8.5, Y=8.5, Z=-92.0 (50% larger: plane geometry 16.5 x 16.5)
+            const pinkMoonMesh = new THREE.Mesh(new THREE.PlaneGeometry(16.5, 16.5), pinkMoonMat);
+            pinkMoonMesh.position.set(-8.5, 8.5, -92.0);
+            pinkMoonMesh.userData.noFade = true;
+            multiplaneGroup.add(pinkMoonMesh);
+
+            const moonLight = new THREE.PointLight(0xff69b4, 3.6, 80);
+            moonLight.position.set(-8.5, 8.5, -88.0);
+            scene.add(moonLight);
+        })();
+
+        const lake = new THREE.Mesh(
+            new THREE.PlaneGeometry(20, 22),
+            new THREE.MeshPhysicalMaterial({ color: 0x00f5d4, transmission: 0.85, roughness: 0.08, transparent: true, opacity: 0.82 })
+        );
+        lake.rotation.x = -Math.PI / 2;
+        lake.position.set(0, -1.30, -112.0);
+        const dune = new THREE.Mesh(new THREE.PlaneGeometry(16, 10), new THREE.MeshStandardMaterial({ color: 0xffd1dc, roughness: 0.85 }));
+        dune.rotation.x = -Math.PI / 2;
+        dune.position.set(0, -1.32, -106.5);
+        multiplaneGroup.add(lake, dune);
+
+        const birds3 = createBillboard('assets/birds.png', 16.0, 8.0);
+        birds3.position.set(3.5, 9.0, -114.0);
+        multiplaneGroup.add(birds3);
+
+
+        // --- DIORAMA 4 (Sentence 4: Z = -129.8) - NO FLICKER, CHERRY TREES SET BACK ---
+        const c4 = createCharacterOnRoad(4, 'assets/couple_4_tight.png', -129.8, 0.6);
+        coupleMeshes.push(c4);
+
+        // Cherry trees placed 4.7 units BEHIND couple at Z = -134.5 (No overlap or Z-fighting)
+        [-8.5, 8.5].forEach(xPos => {
+            const cherryTree = createBillboard('assets/tree_magenta.png', 13.5, 14.0);
+            cherryTree.position.set(xPos, 5.66, -134.5);
+            multiplaneGroup.add(cherryTree);
+        });
+
+        // Diorama 4 "Made In Japan": Teahouse & Pagoda framing sides, House4 placed right after DREAMS text (Z = -160.5) with tiny Z gap!
+        const teahouse = createBillboard('assets/japanese_teahouse.png', 13.5, 11.0);
+        teahouse.position.set(-7.5, 4.1, -125.5);
+        teahouse.scale.x = -1; // Flipped left building horizontally for symmetrical framing
+        if (teahouse.material) teahouse.material.depthWrite = false;
+        multiplaneGroup.add(teahouse);
+
+        const pagoda = createBillboard('assets/pagoda_shrine.png', 13.0, 16.5);
+        pagoda.position.set(7.5, 5.2, -125.5);
+        if (pagoda.material) pagoda.material.depthWrite = false;
+        multiplaneGroup.add(pagoda);
+
+        const house4 = createBillboard('assets/house_country_minka.png', 14.5, 14.5);
+        house4.position.set(0.0, 5.4, -159.0);
+        if (house4.material) house4.material.depthWrite = false;
+        multiplaneGroup.add(house4);
+
+        // Hanging Japanese Red Chochin Paper Lanterns (Z reduced to -132.5)
+        const chochinLeft = createBillboard('assets/japanese_chochin_lantern.png', 2.2, 2.4);
+        chochinLeft.position.set(-3.5, 3.8, -132.5);
+        if (chochinLeft.material) chochinLeft.material.depthWrite = false;
+        const chochinRight = createBillboard('assets/japanese_chochin_lantern.png', 2.2, 2.4);
+        chochinRight.position.set(3.5, 3.8, -132.5);
+        if (chochinRight.material) chochinRight.material.depthWrite = false;
+        multiplaneGroup.add(chochinLeft, chochinRight);
+
+        const chochinLightLeft = new THREE.PointLight(0xff3300, 2.8, 14);
+        chochinLightLeft.position.set(-3.5, 3.8, -132.0);
+        const chochinLightRight = new THREE.PointLight(0xff3300, 2.8, 14);
+        chochinLightRight.position.set(3.5, 3.8, -132.0);
+        scene.add(chochinLightLeft, chochinLightRight);
+
+        // Stone Lanterns & Bamboo Fences lining the street (Z reduced to -133.5 & -135.2, depthWrite = false prevents flickering!)
+        const lanLeft = createBillboard('assets/japanese_stone_lantern.png', 2.8, 3.8);
+        lanLeft.position.set(-4.2, -1.34 + 1.9, -133.5);
+        if (lanLeft.material) lanLeft.material.depthWrite = false;
+        const lanRight = createBillboard('assets/japanese_stone_lantern.png', 2.8, 3.8);
+        lanRight.position.set(4.2, -1.34 + 1.9, -133.5);
+        if (lanRight.material) lanRight.material.depthWrite = false;
+        multiplaneGroup.add(lanLeft, lanRight);
+
+        const fenceLeft = createBillboard('assets/japanese_bamboo_fence.png', 7.5, 3.8);
+        fenceLeft.position.set(-5.8, -1.34 + 1.9, -135.2);
+        if (fenceLeft.material) fenceLeft.material.depthWrite = false;
+        const fenceRight = createBillboard('assets/japanese_bamboo_fence.png', 7.5, 3.8);
+        fenceRight.position.set(5.8, -1.34 + 1.9, -135.2);
+        if (fenceRight.material) fenceRight.material.depthWrite = false;
+        multiplaneGroup.add(fenceLeft, fenceRight);
+
+
+        // --- DIORAMA 5 (Sentence 5: Z = -156.0, 45.00s) - SHINY GEMSTONES ON HIGH FLANKS ---
+        const c5 = createCharacterOnRoad(5, 'assets/couple_5_tight.png', -156.0, -0.6);
+        coupleMeshes.push(c5);
+
+        // Shiny Golden & Crystal Gemstones on HIGH FLANKS (|X| > 5.8, Y > 4.2, NEVER around couple)
+        const shinyObjects = [];
+        const shinyMatGold = new THREE.MeshStandardMaterial({
+            color: 0xffd700,
+            metalness: 0.95,
+            roughness: 0.05,
+            emissive: 0xffaa00,
+            emissiveIntensity: 0.45
+        });
+        const shinyMatCrystal = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            roughness: 0.0,
+            metalness: 0.1,
+            transmission: 0.95,
+            ior: 2.4,
+            reflectivity: 0.9
+        });
+
+        for (let i = 0; i < 20; i++) {
+            const side = i % 2 === 0 ? 1 : -1;
+            const geo = i % 3 === 0 ? new THREE.OctahedronGeometry(0.42) : (i % 3 === 1 ? new THREE.IcosahedronGeometry(0.38) : new THREE.BoxGeometry(0.45, 0.45, 0.45));
+            const mat = i % 2 === 0 ? shinyMatGold : shinyMatCrystal;
+            const obj = new THREE.Mesh(geo, mat);
+
+            const ox = side * (5.8 + Math.random() * 3.4);
+            const oy = 4.2 + Math.random() * 4.2;
+            const oz = -152.0 - (Math.random() * 12.0);
+            obj.position.set(ox, oy, oz);
+            obj.userData = {
+                rotX: 0.02 + Math.random() * 0.03,
+                rotY: 0.03 + Math.random() * 0.02,
+                baseY: oy,
+                seed: Math.random() * Math.PI * 2
+            };
+            multiplaneGroup.add(obj);
+            shinyObjects.push(obj);
+        }
+
+        const gemSparkleLight = new THREE.PointLight(0xfff3b0, 3.0, 25);
+        gemSparkleLight.position.set(0, 6.0, -156.0);
+        scene.add(gemSparkleLight);
+
+        const birds5 = createBillboard('assets/birds.png', 16.0, 8.0);
+        birds5.position.set(-3.6, 8.2, -166.0);
+        multiplaneGroup.add(birds5);
+
+
+        // --- DIORAMA 6 (Sentence 6: Z = -180.7, 52.00s) - CLEAN COUPLE, GROUNDED UPRIGHT WHITISH-PINK TREES AT LYRICS Z=-178.5 & CLOSE MOUNTAIN ---
+        // Single Main Cherry Blossom Couple (Clean tight cutout of ONLY the couple, no background trees)
+        const c6 = createCharacterOnRoad(6, 'assets/couple_6_v3.png?v=3', -180.7, 0.0);
+        coupleMeshes.push(c6);
+
+        // Whitish-pink trees standing UPRIGHT (rotation.z = 0) grounded at LYRICS text position (Z = -178.5, NO floating mid-air trees!)
+        const archTreeLeft = createBillboard('assets/tree_bonsai.png', 13.5, 14.0);
+        archTreeLeft.position.set(-8.5, -1.34 + 7.0, -178.5);
+        archTreeLeft.rotation.z = 0; // Standing upright, no leaning!
+        if (archTreeLeft.material) archTreeLeft.material.depthWrite = false;
+
+        const archTreeRight = createBillboard('assets/tree_bonsai.png', 13.5, 14.0);
+        archTreeRight.position.set(8.5, -1.34 + 7.0, -178.5);
+        archTreeRight.rotation.z = 0; // Standing upright, no leaning!
+        if (archTreeRight.material) archTreeRight.material.depthWrite = false;
+
+        multiplaneGroup.add(archTreeLeft, archTreeRight);
+
+        // Backdrop Mountain centered right after couple 6 (Z = -181.8)
+        const mCenter = createBillboard('assets/ai_ghibli_mountain_1.png', 48.0, 24.0);
+        mCenter.position.set(0.0, 7.2, -181.8);
+        if (mCenter.material) mCenter.material.depthWrite = false;
+        multiplaneGroup.add(mCenter);
+
+        // Radiant Graphic Sun 6
+        const sun6 = createGraphicSun(22.0);
+        sun6.position.set(0, 26.0, -208.0);
+        multiplaneGroup.add(sun6);
+        const sunLight6 = new THREE.PointLight(0xffa500, 3.2, 85);
+        sunLight6.position.set(0, 26.0, -204.0);
+        scene.add(sunLight6);
+
+
+        // --- DIORAMA 7 (Sentence 7: Z = -208.0) - COUNTRYSIDE RIVERSIDE HOUSE (60% SIZE), STONES & ARCHED BRIDGE (BIT MORE RIGHT) ---
+        const c7 = createCharacterOnRoad(7, 'assets/couple_7_tight.png', -208.0, -0.6);
+        coupleMeshes.push(c7);
+
+        // Small Riverside House on the LEFT side of the road (reduced to 60% size: 7.8 x 7.8)
+        const riversideHouse = createBillboard('assets/riverside_cottage.png', 7.8, 7.8);
+        riversideHouse.position.set(-6.8, -1.34 + 3.9, -210.0);
+        if (riversideHouse.material) riversideHouse.material.depthWrite = false;
+        multiplaneGroup.add(riversideHouse);
+
+        // Backgroundless Arched Bridge shifted further right to X = 7.8 (completely clear off the road!)
+        const bridge = createBillboard('assets/japanese_bridge_clean.png', 14.5, 8.5);
+        bridge.position.set(7.8, 1.91, -212.0);
+        if (bridge.material) bridge.material.depthWrite = false;
+        multiplaneGroup.add(bridge);
+
+        // Countryside Stone Lanterns & Bamboo Fences lining both sides of the road (NO river stream on road!)
+        const riverLanLeft = createBillboard('assets/japanese_stone_lantern.png', 3.0, 4.0);
+        riverLanLeft.position.set(-4.5, -1.34 + 2.0, -209.5);
+        if (riverLanLeft.material) riverLanLeft.material.depthWrite = false;
+
+        const riverLanRight = createBillboard('assets/japanese_stone_lantern.png', 3.0, 4.0);
+        riverLanRight.position.set(4.5, -1.34 + 2.0, -209.5);
+        if (riverLanRight.material) riverLanRight.material.depthWrite = false;
+
+        const riverFenceLeft = createBillboard('assets/japanese_bamboo_fence.png', 7.5, 3.8);
+        riverFenceLeft.position.set(-6.0, -1.34 + 1.9, -211.5);
+        if (riverFenceLeft.material) riverFenceLeft.material.depthWrite = false;
+
+        const riverFenceRight = createBillboard('assets/japanese_bamboo_fence.png', 7.5, 3.8);
+        riverFenceRight.position.set(6.0, -1.34 + 1.9, -211.5);
+        if (riverFenceRight.material) riverFenceRight.material.depthWrite = false;
+
+        multiplaneGroup.add(riverLanLeft, riverLanRight, riverFenceLeft, riverFenceRight);
+
+        const ring1 = new THREE.Mesh(new THREE.TorusGeometry(0.85, 0.09, 16, 48), new THREE.MeshStandardMaterial({ color: 0xff007f, metalness: 0.85, roughness: 0.15 }));
+        const ring2 = new THREE.Mesh(new THREE.TorusGeometry(0.85, 0.09, 16, 48), new THREE.MeshStandardMaterial({ color: 0x7b2cbf, metalness: 0.90, roughness: 0.12 }));
+        ring1.position.set(-0.45, 1.4, -213.0); ring1.rotation.y = 0.45;
+        ring2.position.set(0.45, 1.4, -213.0); ring2.rotation.y = -0.45;
+        multiplaneGroup.add(ring1, ring2);
+
+        const birds7 = createBillboard('assets/birds.png', 16.0, 8.0);
+        birds7.position.set(3.6, 8.5, -220.0);
+        multiplaneGroup.add(birds7);
+
+
+        // --- DIORAMA 8 (Sentence 8: Z = -234.2) - CYBER TOKYO & BALLOON ---
+        const c8 = createCharacterOnRoad(8, 'assets/couple_8_tight.png', -234.2, 0.6);
+        coupleMeshes.push(c8);
+
+        const balloon = createBillboard('assets/balloon.png', 7.5, 9.5);
+        balloon.position.set(5.0, 11.0, -244.0);
+        balloon.userData = { baseY: 11.0, bobSpeed: 1.8 };
+        multiplaneGroup.add(balloon);
+        const hotAirBalloons = [balloon];
+
+        [-9.5, 9.5].forEach((tx, idx) => {
+            const tower = new THREE.Mesh(
+                new THREE.BoxGeometry(3.5, 24, 3.5),
+                new THREE.MeshStandardMaterial({ color: 0x18002a, metalness: 0.85, roughness: 0.25, emissive: idx === 0 ? 0xff007f : 0x7b2cbf, emissiveIntensity: 0.25 })
+            );
+            tower.position.set(tx, 9.5, -244.0);
+            multiplaneGroup.add(tower);
+        });
+
+
+        // =========================================================================
+        // 10. OUTRO FINALE & 30 WARM FLOATING SKY LANTERNS
+        // =========================================================================
+        const soloGroup = new THREE.Group();
+        scene.add(soloGroup);
+
+        const vinylGeo = new THREE.CylinderGeometry(4.5, 4.5, 0.1, 48);
+        const vinylMat = new THREE.MeshStandardMaterial({ color: 0x0a0512, roughness: 0.15, metalness: 0.85 });
+        const vinylMesh = new THREE.Mesh(vinylGeo, vinylMat);
+        vinylMesh.rotation.x = Math.PI / 2;
+        vinylMesh.position.set(0, 3.5, -248.0);
+        soloGroup.add(vinylMesh);
+        soloGroup.userData = { vinyl: vinylMesh };
+
+        const floatingHearts = [];
+        const heartShape = new THREE.Shape();
+        heartShape.moveTo(0, 0.35);
+        heartShape.bezierCurveTo(0, 0.65, -0.6, 0.9, -0.6, 0.4);
+        heartShape.bezierCurveTo(-0.6, 0.1, 0, -0.4, 0, -0.6);
+        heartShape.bezierCurveTo(0, -0.4, 0.6, 0.1, 0.6, 0.4);
+        heartShape.bezierCurveTo(0.6, 0.9, 0, 0.65, 0, 0.35);
+
+        const heartGeo = new THREE.ShapeGeometry(heartShape);
+        const heartMat = new THREE.MeshBasicMaterial({ color: 0xff007f, side: THREE.DoubleSide });
+        for (let i = 0; i < 28; i++) {
+            const hm = new THREE.Mesh(heartGeo, heartMat);
+            hm.scale.set(0.45, 0.45, 0.45);
+            hm.position.set((Math.random() - 0.5) * 14, 0.8 + Math.random() * 4.0, -50 - Math.random() * 200);
+            multiplaneGroup.add(hm);
+            floatingHearts.push(hm);
+        }
+
+        const finaleCanvas = document.createElement('canvas');
+        finaleCanvas.width = 1024; finaleCanvas.height = 256;
+        const fCtx = finaleCanvas.getContext('2d');
+        fCtx.font = '900 68px "Montserrat", sans-serif';
+        fCtx.textAlign = 'center';
+        fCtx.textBaseline = 'middle';
+        fCtx.fillStyle = '#ff007f';
+        fCtx.fillText('THE GIRL MADE IN JAPAN', 512, 128);
+        const finaleTex = new THREE.CanvasTexture(finaleCanvas);
+        const finaleMesh = new THREE.Mesh(new THREE.PlaneGeometry(12, 3.0), new THREE.MeshBasicMaterial({ map: finaleTex, transparent: true, side: THREE.DoubleSide }));
+        finaleMesh.position.set(0, 3.5, -248.0);
+        soloGroup.add(finaleMesh);
+
+        const skyLanterns = [];
+        for (let i = 0; i < 30; i++) {
+            const lantern = createBillboard('assets/lantern_warm.png', 2.3, 2.3);
+            lantern.position.set((Math.random() - 0.5) * 34, 2.2 + Math.random() * 15, -216 - Math.random() * 44);
+            lantern.userData = {
+                riseSpeed: 0.02 + Math.random() * 0.03,
+                swaySeed: Math.random() * Math.PI * 2
+            };
+            soloGroup.add(lantern);
+            skyLanterns.push(lantern);
+        }
+        soloGroup.userData.skyLanterns = skyLanterns;
+
+
+        // =========================================================================
+        // 11. 3D KINETIC TYPOGRAPHY (TEXT STAYS IN PLACE ON ROAD)
+        // =========================================================================
+        function toTitleCase(str) {
+            return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+        }
+
+        function createWordTexture(text, isKey, isActive) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 280;
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = isKey ? '900 120px "Montserrat", "Zen Maru Gothic", sans-serif' : '900 100px "Montserrat", "Zen Maru Gothic", sans-serif';
+            ctx.letterSpacing = isKey ? '10px' : '6px';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            const cx = 512;
+            const cy = 140;
+
+            // Clean Warm Neutral Drop Shadow (Zero Violet/Purple tint!)
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.50)';
+            ctx.shadowBlur = isKey ? 20 : 14;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 6;
+
+            // Single Crisp White Backing Stroke
+            ctx.lineWidth = isKey ? 20 : 14;
+            ctx.strokeStyle = '#ffffff';
+            ctx.strokeText(text, cx, cy);
+
+            // Turn off shadow before filling text so inside of letters stays crisp & clear
+            ctx.shadowBlur = 0;
+
+            // Radiant Gradient Fill
+            const grad = ctx.createLinearGradient(0, 50, 0, 230);
+            if (isActive) {
+                // Active singing word highlight: pure radiant white-to-hot-pink
+                grad.addColorStop(0, '#ffffff');
+                grad.addColorStop(0.35, '#ff66b2');
+                grad.addColorStop(1, '#ff0066');
+            } else if (isKey) {
+                // Key Words: Iconic Coral Red to Deep Crimson
+                grad.addColorStop(0, '#ff3366');
+                grad.addColorStop(0.5, '#ff0033');
+                grad.addColorStop(1, '#c80028');
+            } else {
+                // Regular Words: Crisp White to Soft Pure Pink (0% Violet!)
+                grad.addColorStop(0, '#ffffff');
+                grad.addColorStop(0.45, '#ff99c8');
+                grad.addColorStop(1, '#ff3399');
+            }
+
+            ctx.fillStyle = grad;
+            ctx.fillText(text, cx, cy);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.minFilter = THREE.LinearFilter;
+            return { texture, aspect: canvas.width / canvas.height };
+        }
+
+        // --- ACOUSTIC TIMINGS ---
+        const RAW_WORDS_DATA = [
+            // Verse 1 Line 1 (14.50 - 18.45s) [shifted -0.83s per user]
+            { word: "My", start: 15.40, end: 15.65, isKey: false, phraseId: 1 },
+            { word: "Transistor", start: 15.65, end: 16.54, isKey: true, phraseId: 1 },
+            { word: "Radio", start: 16.54, end: 17.48, isKey: true, phraseId: 1 },
+            { word: "Comes", start: 17.48, end: 17.82, isKey: false, phraseId: 1 },
+            { word: "From", start: 17.82, end: 18.20, isKey: false, phraseId: 1 },
+            { word: "Far", start: 18.20, end: 18.84, isKey: true, phraseId: 1 },
+            { word: "Away", start: 18.84, end: 19.35, isKey: true, phraseId: 1 },
+
+            // Verse 1 Line 2 (22.50 - 27.20s)
+            { word: "And", start: 22.90, end: 23.15, isKey: false, phraseId: 2 },
+            { word: "When", start: 23.15, end: 23.40, isKey: false, phraseId: 2 },
+            { word: "It's", start: 23.40, end: 23.75, isKey: false, phraseId: 2 },
+            { word: "Night", start: 23.75, end: 24.15, isKey: true, phraseId: 2 },
+            { word: "Over", start: 24.15, end: 24.55, isKey: false, phraseId: 2 },
+            { word: "Here", start: 24.55, end: 24.95, isKey: false, phraseId: 2 },
+            { word: "Over", start: 24.95, end: 25.35, isKey: false, phraseId: 2 },
+            { word: "There", start: 25.35, end: 25.75, isKey: false, phraseId: 2 },
+            { word: "It's", start: 25.75, end: 26.05, isKey: false, phraseId: 2 },
+            { word: "A", start: 26.05, end: 26.40, isKey: false, phraseId: 2 },
+            { word: "Breakin'", start: 26.40, end: 26.85, isKey: true, phraseId: 2 },
+            { word: "Day", start: 26.85, end: 27.60, isKey: true, phraseId: 2 },
+
+            // Verse 2 Line 1 (30.00 - 34.10s)
+            { word: "I", start: 30.40, end: 30.65, isKey: false, phraseId: 3 },
+            { word: "Remember", start: 30.65, end: 31.10, isKey: true, phraseId: 3 },
+            { word: "All", start: 31.10, end: 31.40, isKey: false, phraseId: 3 },
+            { word: "The", start: 31.40, end: 31.65, isKey: false, phraseId: 3 },
+            { word: "Good", start: 31.65, end: 31.95, isKey: true, phraseId: 3 },
+            { word: "Times", start: 31.95, end: 32.30, isKey: false, phraseId: 3 },
+            { word: "I", start: 32.30, end: 32.55, isKey: false, phraseId: 3 },
+            { word: "Had", start: 32.55, end: 32.85, isKey: false, phraseId: 3 },
+            { word: "A", start: 32.85, end: 33.15, isKey: false, phraseId: 3 },
+            { word: "Walkin'", start: 33.15, end: 33.60, isKey: true, phraseId: 3 },
+            { word: "In", start: 33.60, end: 33.85, isKey: false, phraseId: 3 },
+            { word: "The", start: 33.85, end: 34.10, isKey: false, phraseId: 3 },
+            { word: "Sand", start: 34.10, end: 34.50, isKey: true, phraseId: 3 },
+
+            // Verse 2 Line 2 (37.00 - 40.80s)
+            { word: "With", start: 37.40, end: 37.70, isKey: false, phraseId: 4 },
+            { word: "The", start: 37.70, end: 37.95, isKey: false, phraseId: 4 },
+            { word: "Beautiful", start: 37.95, end: 38.70, isKey: true, phraseId: 4 },
+            { word: "Girl", start: 38.70, end: 39.20, isKey: true, phraseId: 4 },
+            { word: "That", start: 39.20, end: 39.60, isKey: false, phraseId: 4 },
+            { word: "I", start: 39.60, end: 39.85, isKey: false, phraseId: 4 },
+            { word: "Met", start: 39.85, end: 40.15, isKey: false, phraseId: 4 },
+            { word: "Made", start: 40.15, end: 40.45, isKey: true, phraseId: 4 },
+            { word: "In", start: 40.45, end: 40.75, isKey: false, phraseId: 4 },
+            { word: "Japan", start: 40.75, end: 41.20, isKey: true, phraseId: 4 },
+
+            // Verse 3 Line 1 (Sentence 5: "The Beauty Of Her Face" - Japan diorama scene)
+            { word: "The", start: 44.80, end: 45.20, isKey: false, phraseId: 5 },
+            { word: "Beauty", start: 45.30, end: 45.90, isKey: true, phraseId: 5 },
+            { word: "Of", start: 46.00, end: 46.35, isKey: false, phraseId: 5 },
+            { word: "Her", start: 46.40, end: 46.75, isKey: false, phraseId: 5 },
+            { word: "Face", start: 46.80, end: 47.45, isKey: true, phraseId: 5 },
+            { word: "Was", start: 47.50, end: 47.85, isKey: false, phraseId: 5 },
+            { word: "Beyond", start: 47.90, end: 48.35, isKey: false, phraseId: 5 },
+            { word: "My", start: 48.40, end: 48.75, isKey: false, phraseId: 5 },
+            { word: "Wildest", start: 48.80, end: 49.25, isKey: true, phraseId: 5 },
+            { word: "Dreams", start: 49.30, end: 50.80, isKey: true, phraseId: 5 },
+
+            // Verse 3 Line 2 (Sentence 6: "Cherry Blossoms / Spring" falling flower burst)
+            { word: "Like", start: 52.40, end: 52.70, isKey: false, phraseId: 6 },
+            { word: "Cherry", start: 52.70, end: 53.25, isKey: true, phraseId: 6 },
+            { word: "Blossoms", start: 53.25, end: 53.80, isKey: true, phraseId: 6 },
+            { word: "Bloomin'", start: 53.80, end: 54.35, isKey: true, phraseId: 6 },
+            { word: "In", start: 54.35, end: 54.65, isKey: false, phraseId: 6 },
+            { word: "The", start: 54.65, end: 54.95, isKey: false, phraseId: 6 },
+            { word: "Mountain", start: 54.95, end: 55.40, isKey: true, phraseId: 6 },
+            { word: "In", start: 55.40, end: 55.65, isKey: false, phraseId: 6 },
+            { word: "The", start: 55.65, end: 55.90, isKey: false, phraseId: 6 },
+            { word: "Early", start: 55.90, end: 56.20, isKey: false, phraseId: 6 },
+            { word: "Spring", start: 56.20, end: 56.80, isKey: true, phraseId: 6 },
+
+            // Verse 4 Line 1 (Sentence 7: "As We Walked" - starting slightly later at 59.45s with faster pace)
+            { word: "As", start: 59.45, end: 59.65, isKey: false, phraseId: 7 },
+            { word: "We", start: 59.65, end: 59.85, isKey: false, phraseId: 7 },
+            { word: "Walked", start: 59.85, end: 60.18, isKey: true, phraseId: 7 },
+            { word: "By", start: 60.20, end: 60.55, isKey: false, phraseId: 7 },
+            { word: "The", start: 60.55, end: 60.85, isKey: false, phraseId: 7 },
+            { word: "River", start: 60.85, end: 61.40, isKey: true, phraseId: 7 },
+            { word: "And", start: 61.40, end: 61.75, isKey: false, phraseId: 7 },
+            { word: "She", start: 61.75, end: 62.10, isKey: false, phraseId: 7 },
+            { word: "Softly", start: 62.10, end: 62.60, isKey: true, phraseId: 7 },
+            { word: "Took", start: 62.60, end: 62.95, isKey: false, phraseId: 7 },
+            { word: "Hold", start: 62.95, end: 63.30, isKey: false, phraseId: 7 },
+            { word: "Of", start: 63.30, end: 63.55, isKey: false, phraseId: 7 },
+            { word: "My", start: 63.55, end: 63.75, isKey: false, phraseId: 7 },
+            { word: "Hand", start: 63.75, end: 64.25, isKey: true, phraseId: 7 },
+
+            // Verse 4 Line 2 (66.50 - 71.50s)
+            { word: "I", start: 66.90, end: 67.25, isKey: false, phraseId: 8 },
+            { word: "Fell", start: 67.25, end: 67.75, isKey: true, phraseId: 8 },
+            { word: "In", start: 67.75, end: 68.10, isKey: false, phraseId: 8 },
+            { word: "Love", start: 68.10, end: 68.60, isKey: true, phraseId: 8 },
+            { word: "With", start: 68.60, end: 69.00, isKey: false, phraseId: 8 },
+            { word: "The", start: 69.00, end: 69.35, isKey: false, phraseId: 8 },
+            { word: "Girl", start: 69.35, end: 69.90, isKey: true, phraseId: 8 },
+            { word: "Made", start: 69.90, end: 70.40, isKey: true, phraseId: 8 },
+            { word: "In", start: 70.40, end: 70.80, isKey: false, phraseId: 8 },
+            { word: "Japan", start: 70.80, end: 71.90, isKey: true, phraseId: 8 }
+        ];
+
+        const WORDS_DATA = RAW_WORDS_DATA.map(w => ({
+            ...w,
+            word: toTitleCase(w.word)
+        }));
+
+        const PHRASES_DATA = [
+            { id: 1, start: 15.33, end: 19.28, pauseEnd: 22.00 },
+            { id: 2, start: 22.50, end: 27.20, pauseEnd: 29.50 },
+            { id: 3, start: 30.00, end: 34.10, pauseEnd: 36.50 },
+            { id: 4, start: 37.00, end: 40.80, pauseEnd: 44.50 },
+            { id: 5, start: 44.80, end: 49.35, pauseEnd: 51.50 },
+            { id: 6, start: 52.00, end: 56.40, pauseEnd: 58.80 },
+            { id: 7, start: 59.00, end: 63.80, pauseEnd: 66.00 },
+            { id: 8, start: 66.50, end: 71.50, pauseEnd: 74.00 }
+        ];
+
+        const phraseMap = {};
+        PHRASES_DATA.forEach(p => { phraseMap[p.id] = p; });
+
+                        const wordItems = [];
+
+        // --- DYNAMIC "HERE AND THERE" 3D SCATTERED TEXT LAYOUT ---
+        WORDS_DATA.forEach((item, index) => {
+            const { texture: baseTex, aspect } = createWordTexture(item.word, item.isKey, false);
+            const { texture: activeTex } = createWordTexture(item.word, item.isKey, true);
+
+            const mat = new THREE.MeshBasicMaterial({
+                map: baseTex,
+                transparent: true,
+                opacity: 0.0,
+                side: THREE.DoubleSide,
+                depthWrite: false
+            });
+
+            // Organic floating pseudo-random arrangement (natural, varied 3D positions with generous breathing room)
+            const phase1 = index * 1.37 + (item.isKey ? 0.4 : 0.0);
+            const phase2 = index * 2.13;
+            let posX = Math.sin(phase1) * 1.45 + Math.cos(phase2 * 0.7) * 0.40;
+            let posY = 2.40 + Math.cos(phase1 * 1.1) * 0.38 + Math.sin(phase2 * 1.3) * 0.22;
+
+            // Compact sizing for Sentence 6 (Cherry Blossom) to keep text airy and un-clumsy
+            let baseH = (item.isKey ? 1.85 : 1.15) * 0.45;
+            if (item.phraseId === 6) {
+                baseH = (item.isKey ? 1.40 : 0.90) * 0.36; // Compact elegant size for Cherry Blossom sentence
+            }
+            const height = (item.word === 'Dreams') ? 3.0 : baseH;
+            const width = (item.word === 'Dreams') ? (height * aspect * 0.90) : (height * aspect * 0.85);
+            const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), mat);
+
+            // Targeted organic anti-stacking adjustments ONLY for specific words requested by user
+            if (item.phraseId === 8) {
+                if (item.word === 'Fell') { posX = -1.25; posY = 2.55; }
+                else if (item.word === 'In' && item.start < 68.3) { posX = -0.15; posY = 1.70; } // First 'In' after Fell
+                else if (item.word === 'Love') { posX = 1.35; posY = 2.85; }
+            }
+
+            const speedZ = 3.4;
+            const posZ = 12.0 - ((item.start - 1.0) * speedZ);
+
+            // "Dreams" text positioned centered right behind couple 5 (Z = -157.5)
+            const finalPosX = (item.word === 'Dreams') ? 0.0 : posX;
+            const finalPosY = (item.word === 'Dreams') ? 4.5 : (item.word === 'Sand' ? 1.85 : posY);
+            const finalPosZ = (item.word === 'Dreams') ? -157.5 : posZ;
+
+            mesh.position.set(finalPosX, finalPosY, finalPosZ);
+            mesh.rotation.z = (item.word === 'Dreams') ? 0.0 : (Math.sin(phase1) * 0.035);
+            mesh.rotation.x = -0.04;
+            mesh.scale.set(0.001, 0.001, 0.001);
+            scene.add(mesh);
+
+            // Calculate exact time gap to next word for dynamic camera lerp speed
+            const nextItem = WORDS_DATA[index + 1];
+            const nextGap = (nextItem && nextItem.phraseId === item.phraseId) ? (nextItem.start - item.end) : 0.65;
+
+            wordItems.push({
+                data: item,
+                mesh: mesh,
+                mat: mat,
+                baseTex: baseTex,
+                activeTex: activeTex,
+                pos: new THREE.Vector3(finalPosX, finalPosY, finalPosZ),
+                isKey: item.isKey,
+                start: item.start,
+                end: item.end,
+                phraseId: item.phraseId,
+                nextGap: nextGap,
+                targetScale: (item.word === 'Dreams') ? 1.0 : (item.isKey ? 1.15 : 1.0),
+                currentScale: 0.001
+            });
+        });
+
+        // --- 12. AUDIO CONTROLS & PARALLAX ---
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('playBtn');
+        const playIntroBtn = document.getElementById('playIntroBtn');
+        const ui = document.getElementById('ui');
+        const controls = document.getElementById('controls');
+        const btnPlayPause = document.getElementById('btnPlayPause');
+        const playIcon = document.getElementById('playIcon');
+        const btnBack5 = document.getElementById('btnBack5');
+        const btnFwd5 = document.getElementById('btnFwd5');
+        const scrubber = document.getElementById('scrubber');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const btnMute = document.getElementById('btnMute');
+        const btnFullscreen = document.getElementById('btnFullscreen');
+        const replayModal = document.getElementById('replayModal');
+        const btnReplay = document.getElementById('btnReplay');
+        const vizCanvas = document.getElementById('vizCanvas');
+        const vCtx = vizCanvas.getContext('2d');
+
+        const MAX_TIME = 74.0;
+        let isPlaying = false;
+        let isScrubbing = false;
+
+        let audioCtx = null;
+        let analyser = null;
+        let dataArray = null;
+        let audioBass = 0;
+        let audioMid = 0;
+
+        function initAudioContext() {
+            if (audioCtx) return;
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const srcNode = audioCtx.createMediaElementSource(audio);
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 64;
+                srcNode.connect(analyser);
+                analyser.connect(audioCtx.destination);
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+            } catch (err) {
+                console.warn('Web Audio fallback:', err);
+            }
+        }
+
+        function formatTime(s) {
+            const m = Math.floor(s / 60);
+            const sec = Math.floor(s % 60);
+            return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        let experienceActive = false;
+        let simulatedTime = 15.4;
+        let lastFrameTimestamp = performance.now();
+
+        function startExperience(startSec) {
+            if (typeof startSec !== 'number') startSec = 15.4;
+            initAudioContext();
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume().catch(() => {});
+            }
+            const uiElem = document.getElementById('ui');
+            if (uiElem) {
+                uiElem.style.display = 'none';
+                uiElem.style.opacity = '0';
+                uiElem.style.pointerEvents = 'none';
+            }
+            const replayElem = document.getElementById('replayModal');
+            if (replayElem) replayElem.classList.remove('active');
+            const ctrlElem = document.getElementById('controls');
+            if (ctrlElem) ctrlElem.classList.add('active');
+
+            experienceActive = true;
+            isPlaying = true;
+            simulatedTime = startSec;
+            lastFrameTimestamp = performance.now();
+
+            // Set audio position and play
+            try {
+                audio.currentTime = startSec;
+            } catch (err) {
+                console.warn('Audio seek deferred:', err);
+            }
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => {
+                    console.warn('Auto-play fallback:', e);
+                    // Add window click listener to start audio on next touch/click if blocked
+                    const unblock = () => {
+                        audio.play().catch(() => {});
+                        window.removeEventListener('click', unblock);
+                        window.removeEventListener('keydown', unblock);
+                    };
+                    window.addEventListener('click', unblock);
+                    window.addEventListener('keydown', unblock);
+                });
+            }
+        }
+
+                window.__startExperience = startExperience;
+        window.__appReady = true;
+        if (window.__pendingStartSec !== null) {
+            startExperience(window.__pendingStartSec);
+        }
+
+        playBtn.addEventListener('click', (e) => { e.stopPropagation(); startExperience(15.4); });
+        playIntroBtn.addEventListener('click', (e) => { e.stopPropagation(); startExperience(0.0); });
+        ui.addEventListener('click', () => { startExperience(15.4); });
+        document.body.addEventListener('click', () => {
+            if (!experienceActive) startExperience(15.4);
+        });
+        btnReplay.addEventListener('click', () => { replayModal.classList.remove('active'); startExperience(0.0); });
+
+        btnPlayPause.addEventListener('click', () => {
+            initAudioContext();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            if (audio.paused) {
+                if (audio.currentTime >= MAX_TIME) audio.currentTime = 0;
+                audio.play();
+                isPlaying = true;
+            } else {
+                audio.pause();
+                isPlaying = false;
+            }
+        });
+
+        btnBack5.addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 5); });
+        btnFwd5.addEventListener('click', () => { audio.currentTime = Math.min(MAX_TIME, audio.currentTime + 5); });
+
+        scrubber.addEventListener('input', (e) => {
+            isScrubbing = true;
+            audio.currentTime = parseFloat(e.target.value);
+            timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(MAX_TIME)}`;
+        });
+        scrubber.addEventListener('change', () => { isScrubbing = false; });
+
+        btnMute.addEventListener('click', () => {
+            audio.muted = !audio.muted;
+            btnMute.style.color = audio.muted ? '#ff007f' : '#5a189a';
+        });
+
+        btnFullscreen.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        });
+
+        audio.addEventListener('play', () => { playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; });
+        audio.addEventListener('pause', () => { playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; });
+
+        const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+        window.addEventListener('mousemove', (e) => {
+            mouse.targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouse.targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        // --- 13. CONTINUOUS CAMERA & STATIONS ---
+        const STATIONS = [
+            { id: 1, pauseStart: 19.35, pauseEnd: 22.35, coupleZ: -56.7, camZ: -50.2, camX: -0.6, lookY: 2.1 },
+            { id: 2, pauseStart: 27.60, pauseEnd: 29.80, coupleZ: -83.6, camZ: -77.1, camX: 0.6, lookY: 2.1 },
+            { id: 3, pauseStart: 34.50, pauseEnd: 36.80, coupleZ: -104.0, camZ: -97.5, camX: -0.6, lookY: 2.1 },
+            { id: 4, pauseStart: 41.20, pauseEnd: 44.80, coupleZ: -129.8, camZ: -123.3, camX: 0.6, lookY: 2.4 },
+            { id: 5, pauseStart: 49.35, pauseEnd: 51.80, coupleZ: -156.0, camZ: -149.5, camX: -0.6, lookY: 2.1 },
+            { id: 6, pauseStart: 56.80, pauseEnd: 58.80, coupleZ: -180.7, camZ: -174.2, camX: 0.6, lookY: 2.2 },
+            { id: 7, pauseStart: 64.20, pauseEnd: 66.30, coupleZ: -208.0, camZ: -201.5, camX: -0.6, lookY: 2.1 },
+            { id: 8, pauseStart: 71.90, pauseEnd: 74.00, coupleZ: -234.2, camZ: -227.7, camX: 0.6, lookY: 2.1 }
+        ];
+
+        let currentLookAt = new THREE.Vector3(0, 1.6, 0);
+        let lastTargetWordId = null; // tracks when a NEW word pops so camera can teleport
+
+        function animate(timestamp) {
+            requestAnimationFrame(animate);
+
+            const now = performance.now();
+            const dt = Math.min(0.1, (now - lastFrameTimestamp) / 1000);
+            lastFrameTimestamp = now;
+
+            if (experienceActive && isPlaying) {
+                if (!audio.paused && !audio.seeking && audio.currentTime > 0) {
+                    simulatedTime = audio.currentTime;
+                } else {
+                    simulatedTime += dt;
+                    if (audio.paused && audio.readyState >= 2) {
+                        audio.play().catch(() => {});
+                    }
+                }
+            }
+            const curAudioTime = simulatedTime;
+
+            if (curAudioTime >= MAX_TIME) {
+                if (!audio.paused) {
+                    audio.pause();
+                    isPlaying = false;
+                }
+                replayModal.classList.add('active');
+            }
+
+            // Frequency Analysis
+            if (analyser && dataArray && isPlaying && !audio.paused) {
+                analyser.getByteFrequencyData(dataArray);
+                let sumBass = 0;
+                for (let i = 0; i < 4; i++) sumBass += dataArray[i];
+                audioBass = (sumBass / 4) / 255.0;
+
+                let sumMid = 0;
+                for (let i = 4; i < 16; i++) sumMid += dataArray[i];
+                audioMid = (sumMid / 12) / 255.0;
+
+                vCtx.clearRect(0, 0, 100, 40);
+                const barW = 100 / 16;
+                for (let i = 0; i < 16; i++) {
+                    const h = (dataArray[i] / 255) * 36;
+                    vCtx.fillStyle = i % 2 === 0 ? '#ff007f' : '#7b2cbf';
+                    vCtx.fillRect(i * barW, 40 - h, barW - 1.5, h);
+                }
+            } else {
+                audioBass = 0.15 + Math.sin(curAudioTime * 4) * 0.1;
+                audioMid = 0.15 + Math.cos(curAudioTime * 3) * 0.1;
+            }
+
+            if (!isScrubbing) {
+                scrubber.value = Math.min(MAX_TIME, curAudioTime);
+                timeDisplay.textContent = `${formatTime(Math.min(MAX_TIME, curAudioTime))} / ${formatTime(MAX_TIME)}`;
+            }
+
+            mouse.x += (mouse.targetX - mouse.x) * 0.05;
+            mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+            // Skydome rotation (back layer remains fixed in world Z space)
+            skyMesh.rotation.y = curAudioTime * 0.005 + (camera.position.x * 0.003);
+
+            // Simple comic clouds gentle horizontal drift in sky
+            // Clouds fade in only after camera has traveled past the start (z < -5)
+            const cloudFadeIn = THREE.MathUtils.clamp(((-5.0) - camera.position.z) / 12.0, 0, 1);
+            comicCloudMeshes.forEach(c => {
+                c.position.x = c.userData.baseX + Math.sin(curAudioTime * c.userData.driftSpeed + c.userData.seed) * 1.8;
+                if (c.material) {
+                    c.material.opacity = cloudFadeIn;
+                    c.visible = cloudFadeIn > 0.01;
+                }
+            });
+
+            // Street lamps subtle flame pulsation
+            volumetricLamps.forEach(lg => {
+                if (lg.userData.light) {
+                    lg.userData.light.intensity = 2.3 + Math.sin(curAudioTime * 3.5 + lg.userData.lampIdx) * 0.35;
+                }
+            });
+
+            // Falling leaves strictly on flanking sides
+            leafParticles.forEach(p => {
+                p.rotation.x += p.userData.rotSpeedX;
+                p.rotation.y += p.userData.rotSpeedY;
+                p.position.y -= p.userData.fallSpeed;
+                p.position.x += Math.sin(curAudioTime * p.userData.swayFreq) * p.userData.driftSpeed;
+                if (p.userData.side > 0 && p.position.x < 3.2) p.position.x = 3.2;
+                if (p.userData.side < 0 && p.position.x > -3.2) p.position.x = -3.2;
+                if (p.position.y < -1.5) p.position.y = 22;
+            });
+
+            // Falling Sakura Cherry Blossom Flowers, Pink Petals & Golden Leaves Burst (Diorama 6: 51.5s - 59.0s)
+            const sakuraActive = (curAudioTime >= 51.5 && curAudioTime <= 59.0);
+            sakuraBurstParticles.forEach(p => {
+                if (sakuraActive) {
+                    p.visible = true;
+                    p.rotation.x += p.userData.rotX;
+                    p.rotation.y += p.userData.rotY;
+                    p.rotation.z += p.userData.rotZ;
+                    p.position.y -= p.userData.fallSpeed;
+                    p.position.x += Math.sin(curAudioTime * p.userData.swayFreq + p.userData.seed) * p.userData.swayAmp;
+                    if (p.position.y < -1.0) {
+                        p.position.y = 18.0 + Math.random() * 6.0;
+                    }
+                } else {
+                    p.visible = false;
+                }
+            });
+
+            // Falling Snow Particles (Sentence 2: 20.0s - 29.5s)
+            const snowActive = (curAudioTime >= 20.0 && curAudioTime <= 29.5);
+            snowParticles.forEach(p => {
+                if (snowActive) {
+                    p.visible = true;
+                    p.position.y -= p.userData.fallSpeed;
+                    p.position.x += Math.sin(curAudioTime * p.userData.swayFreq + p.userData.seed) * p.userData.swayAmp;
+                    if (p.position.y < -1.0) p.position.y = 18.0 + Math.random() * 4.0;
+                } else {
+                    p.visible = false;
+                }
+            });
+
+            // Floating Fire Balloons (Sentence 4 "Made In Japan": 36.5s - 44.5s)
+            const fireBalloonsActive = (curAudioTime >= 36.5 && curAudioTime <= 44.5);
+            fireBalloons.forEach(b => {
+                if (fireBalloonsActive) {
+                    b.visible = true;
+                    b.position.y += b.userData.riseSpeed;
+                    b.position.x += Math.sin(curAudioTime * b.userData.swayFreq + b.userData.seed) * b.userData.swayAmp;
+                    if (b.position.y > 22.0) b.position.y = 1.5 + Math.random() * 3.0;
+                } else {
+                    b.visible = false;
+                }
+            });
+
+            // Pink, Gold & Silver Floating Cubes (Sentence 5 "DREAMS": 44.8s - 51.5s)
+            const cubesActive = (curAudioTime >= 44.8 && curAudioTime <= 51.5);
+            pinkGoldSilverCubes.forEach(c => {
+                if (cubesActive) {
+                    c.visible = true;
+                    c.rotation.x += c.userData.rotX;
+                    c.rotation.y += c.userData.rotY;
+                    c.rotation.z += c.userData.rotZ;
+                    c.position.y = c.userData.baseY + Math.sin(curAudioTime * c.userData.floatFreq + c.userData.seed) * c.userData.floatAmp;
+                } else {
+                    c.visible = false;
+                }
+            });
+
+            // Gentle breathing for couples standing on road
+            coupleMeshes.forEach((cm, idx) => {
+                cm.position.y = (-1.34 + 2.8) + Math.sin(curAudioTime * 4.5 + idx * 0.8) * 0.04;
+            });
+
+            // ── GLOBAL SMOOTH FADE-IN for all scene prop billboards ──────────
+            // Any PlaneGeometry mesh in multiplaneGroup fades in as camera approaches.
+            // Words have their own opacity system (depthWrite:false, handled below).
+            // All multiplaneGroup props are 100% solid opacity (element distance fading disabled)
+            multiplaneGroup.children.forEach(obj => {
+                if (obj.isMesh && obj.material && obj.material.transparent) {
+                    obj.material.opacity = 1.0;
+                    obj.visible = true;
+                }
+            });
+
+            // Mountains in Diorama 6 are continuously visible (no fade out)
+            if (typeof mountainMeshes !== 'undefined') {
+                mountainMeshes.forEach(m => {
+                    if (m.material) {
+                        m.material.opacity = 1.0;
+                        m.visible = true;
+                    }
+                });
+            }
+
+
+
+            // Trees gentle breeze sway
+            treeSwayGroups.forEach(tg => {
+                const sway = Math.sin(curAudioTime * 1.6 + tg.userData.swaySeed) * 0.025;
+                tg.children.forEach(p => { p.rotation.z = sway; });
+            });
+
+            // Floating hearts drift
+            floatingHearts.forEach(h => {
+                h.position.y += 0.012;
+                if (h.position.y > 4.5) h.position.y = 0.8;
+            });
+
+            // Hot air balloons bobbing
+            hotAirBalloons.forEach(b => {
+                b.position.y = b.userData.baseY + Math.sin(curAudioTime * b.userData.bobSpeed) * 0.6;
+            });
+
+            // Shiny gemstones rotation on high flanks
+            shinyObjects.forEach(s => {
+                s.rotation.x += s.userData.rotX;
+                s.rotation.y += s.userData.rotY;
+                s.position.y = s.userData.baseY + Math.sin(curAudioTime * 2.0 + s.userData.seed) * 0.25;
+            });
+
+            // Interlocking rings rotation
+            ring1.rotation.y += 0.02;
+            ring2.rotation.y -= 0.02;
+
+            // Sun1 fades out as camera passes sentence 1 (after ~20s) and Sun6 fades when approaching
+            {
+                // Sun1: visible 0-20s, fades 20-23s, gone after 23s
+                const sun1Opacity = THREE.MathUtils.clamp(1.0 - (curAudioTime - 20.0) / 3.0, 0, 1);
+                sun1.children.forEach(m => {
+                    if (m.material) {
+                        m.material.transparent = true;
+                        m.material.opacity = sun1Opacity;
+                        m.material.needsUpdate = true;
+                    }
+                });
+                sun1.visible = sun1Opacity > 0.01;
+            }
+
+            // =========================================================================
+            // TEXT LIFECYCLE: WORDS POP IN WHEN SUNG & REMAIN VISIBLE ALONG THE ROAD!
+            // =========================================================================
+            wordItems.forEach(item => {
+                const phrase = phraseMap[item.phraseId];
+                const popStart = item.start - 0.20;
+                const phraseEnd = phrase ? phrase.pauseEnd : (item.end + 2.5);
+
+                if (curAudioTime < popStart) {
+                    item.mesh.visible = false;
+                    item.currentScale = 0.001;
+                    item.mat.opacity = 0;
+                } else if (curAudioTime >= popStart && curAudioTime < item.start) {
+                    // Pop into view as audio approaches
+                    item.mesh.visible = true;
+                    item.mat.map = item.baseTex;
+                    const p = (curAudioTime - popStart) / 0.20;
+                    item.mat.opacity = Math.min(1.0, p * 1.5);
+                    item.currentScale = (item.isKey ? 1.25 : 1.05) * p;
+                } else if (curAudioTime >= item.start && curAudioTime <= item.end) {
+                    // Active singing: Highlight texture + Bass audio punch
+                    item.mesh.visible = true;
+                    item.mat.map = item.activeTex;
+                    item.mat.opacity = 1.0;
+                    const punch = item.isKey ? (1.45 + audioBass * 0.25) : (1.15 + audioBass * 0.12);
+                    item.currentScale += (punch - item.currentScale) * 0.35;
+                } else if (curAudioTime > item.end && curAudioTime <= phraseEnd) {
+                    // Sung: WORDS REMAIN VISIBLE IN 3D SPACE ALONG THE ROAD!
+                    item.mesh.visible = true;
+                    item.mat.map = item.baseTex;
+                    item.mat.opacity = 1.0;
+                    item.currentScale += (1.0 - item.currentScale) * 0.20;
+                } else if (curAudioTime > phraseEnd && curAudioTime <= phraseEnd + 0.6) {
+                    // Soft fade out when camera moves past the station
+                    const fade = 1.0 - (curAudioTime - phraseEnd) / 0.6;
+                    item.mesh.visible = true;
+                    item.mat.map = item.baseTex;
+                    item.mat.opacity = fade;
+                    item.currentScale = fade;
+                } else {
+                    item.mesh.visible = false;
+                    item.currentScale = 0.001;
+                    item.mat.opacity = 0;
+                }
+
+                item.mesh.scale.set(item.currentScale, item.currentScale, item.currentScale);
+            });
+
+            // =========================================================================
+            // CONTINUOUS SMOOTH CAMERA GLIDE: SWEEPS THROUGH TEXT AS IT APPEARS
+            // =========================================================================
+            let activeStation = null;
+            for (let i = 0; i < STATIONS.length; i++) {
+                const st = STATIONS[i];
+                if (curAudioTime >= st.pauseStart && curAudioTime <= st.pauseEnd) {
+                    activeStation = st;
+                    break;
+                }
+            }
+
+            let targetWord = null;
+            // Iterate backwards or check latest active word so camera NEVER stays stuck on previous word!
+            for (let i = wordItems.length - 1; i >= 0; i--) {
+                const w = wordItems[i];
+                // Active/upcoming word takes immediate priority (0.30s lead-in to 0.05s trail)
+                if (curAudioTime >= (w.start - 0.30) && curAudioTime <= (w.end + 0.05)) {
+                    targetWord = w;
+                    break;
+                }
+            }
+
+            const speedZ = 3.4;
+            const continuousTravelZ = 12.0 - ((curAudioTime - 1.0) * speedZ);
+
+            let targetCamPos = new THREE.Vector3(0, 1.4, continuousTravelZ);
+            let targetLookAt = new THREE.Vector3(0, 1.6, continuousTravelZ - 14.0);
+            let targetCamRotZ = 0;
+
+            if (targetWord) {
+                // Precise camera focus on word as text pops into view
+                const vocalProgress = Math.min(1.0, Math.max(0.0, (curAudioTime - (targetWord.start - 0.45)) / (targetWord.end - targetWord.start + 0.60)));
+                let dynamicZOffset = 4.4 - (vocalProgress * 1.6);
+
+                const wText = (targetWord.data && targetWord.data.word) ? targetWord.data.word.toLowerCase() : '';
+                // Keep DREAMS camera distance normal (no extreme close-up zoom)
+                if (wText === 'dreams') {
+                    dynamicZOffset = 6.8;
+                } else if (wText === 'beauty') {
+                    dynamicZOffset = 3.6 - (vocalProgress * 1.0); // Precise close-up focus on Beauty
+                } else if (wText === 'the' || wText === 'as') {
+                    dynamicZOffset = 2.2 - (vocalProgress * 0.8);
+                }
+
+                targetCamPos.x = targetWord.pos.x * 0.35;
+                targetCamPos.y = targetWord.pos.y + 0.08;
+                targetCamPos.z = targetWord.pos.z + dynamicZOffset;
+                targetCamRotZ = targetWord.pos.x > 0 ? -0.010 : 0.010;
+                targetLookAt.set(targetWord.pos.x, targetWord.pos.y, targetWord.pos.z);
+            } else if (activeStation) {
+                const pFrac = (curAudioTime - activeStation.pauseStart) / (activeStation.pauseEnd - activeStation.pauseStart);
+                const pauseDuration = activeStation.pauseEnd - activeStation.pauseStart;
+                const driftZ = activeStation.camZ - (pFrac * pauseDuration * 1.5);
+                const driftX = activeStation.camX * (1.0 - pFrac * 0.4);
+                targetCamPos.set(driftX, 1.6 + Math.sin(pFrac * Math.PI) * 0.2, driftZ);
+                targetLookAt.set(0, activeStation.lookY, activeStation.coupleZ);
+                targetCamRotZ = activeStation.camX > 0 ? 0.015 : -0.015;
+            } else if (curAudioTime >= 71.50 && curAudioTime <= 74.0) {
+                const outroP = (curAudioTime - 71.50) / 2.5;
+                targetCamPos.set(0, 2.0 + outroP * 1.5, -238.0 - outroP * 8.0);
+                targetLookAt.set(0, 3.5, -248.0);
+            }
+
+            targetCamPos.x += mouse.x * 0.35;
+            targetCamPos.y += -mouse.y * 0.20;
+
+            // Dynamic AI camera switch speed based on exact inter-word time gap!
+            // Fast words (gap < 0.12s) -> 0.32 fast lerp; Normal words (gap 0.12-0.30s) -> 0.18; Sustained -> 0.11
+            let lerpFactor = 0.080;
+            if (targetWord) {
+                const gap = targetWord.nextGap !== undefined ? targetWord.nextGap : 0.25;
+                lerpFactor = gap < 0.12 ? 0.32 : (gap < 0.28 ? 0.18 : 0.11);
+            }
+            camera.position.lerp(targetCamPos, lerpFactor);
+            currentLookAt.lerp(targetLookAt, lerpFactor);
+            camera.rotation.z += (targetCamRotZ - camera.rotation.z) * 0.06;
+            camera.lookAt(currentLookAt);
+
+            // Follow Lights
+            followLight.position.set(camera.position.x, camera.position.y + 1, camera.position.z - 3);
+            followLight.intensity = 2.4 + audioBass * 1.2;
+            pinkGlow.intensity = 3.4 + audioBass * 1.0;
+            violetGlow.intensity = 2.9 + audioMid * 1.0;
+
+            // Radio sound rings
+            radioRings.forEach((r, idx) => {
+                const phase = (curAudioTime * 2.5 + idx * 0.4) % 2.0;
+                r.scale.set(1 + phase * 1.8, 1 + phase * 1.8, 1);
+                r.material.opacity = Math.max(0, 1 - phase / 2.0);
+            });
+
+            // Outro vinyl spin & lanterns rise
+            if (soloGroup.userData.vinyl) {
+                soloGroup.userData.vinyl.rotation.z += 0.04;
+            }
+            if (soloGroup.userData.skyLanterns) {
+                soloGroup.userData.skyLanterns.forEach(lt => {
+                    lt.position.y += lt.userData.riseSpeed;
+                    lt.position.x += Math.sin(curAudioTime * 1.2 + lt.userData.swaySeed) * 0.012;
+                    if (lt.position.y > 28) lt.position.y = 2.2;
+                });
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // --- 14. RESIZE & KEYBOARD CONTROLS ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                btnPlayPause.click();
+            } else if (e.code === 'ArrowLeft') {
+                btnBack5.click();
+            } else if (e.code === 'ArrowRight') {
+                btnFwd5.click();
+            }
+        });
+
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
