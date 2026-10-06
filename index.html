@@ -727,10 +727,8 @@
         // --- 8. HELPER FUNCTIONS & EXACT CHARACTER ASPECT RATIOS ---
         function createBillboard(texPath, width, height) {
             const tex = textureLoader.load(texPath);
-            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
-            else if (THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
             tex.minFilter = THREE.LinearFilter;
-            const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, alphaTest: 0.12, toneMapped: false });
+            const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, alphaTest: 0.12 });
             return new THREE.Mesh(new THREE.PlaneGeometry(width, height), mat);
         }
 
@@ -750,16 +748,13 @@
             const width = height * aspect;
 
             const tex = textureLoader.load(imgPath);
-            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
-            else if (THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
             tex.minFilter = THREE.LinearFilter;
             const mat = new THREE.MeshBasicMaterial({
                 map: tex,
                 transparent: true,
                 side: THREE.DoubleSide,
                 alphaTest: 0.15,
-                depthWrite: true,
-                toneMapped: false
+                depthWrite: true
             });
             const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), mat);
             // Lower Y slightly (-0.32) so car tires and couple feet sit firmly flush touching the road!
