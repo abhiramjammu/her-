@@ -1052,19 +1052,19 @@
             multiplaneGroup.add(cherryTree);
         });
 
-        // Diorama 4 "Made In Japan": Teahouse & Pagoda framing sides, House4 placed right after DREAMS text (Z = -160.5) with tiny Z gap!
-        const teahouse = createBillboard('assets/japanese_teahouse.png', 13.5, 11.0);
+        // Diorama 4 "Made In Japan": Teahouse & Pagoda framing sides, House4 placed right after DREAMS text (Z = -159.0) with tiny Z gap!
+        const teahouse = createBillboard('assets/japanese_teahouse.png?v=2', 13.5, 11.0);
         teahouse.position.set(-7.5, 4.1, -125.5);
         teahouse.scale.x = -1; // Flipped left building horizontally for symmetrical framing
         if (teahouse.material) teahouse.material.depthWrite = false;
         multiplaneGroup.add(teahouse);
 
-        const pagoda = createBillboard('assets/pagoda_shrine.png', 13.0, 16.5);
+        const pagoda = createBillboard('assets/pagoda_shrine.png?v=2', 13.0, 16.5);
         pagoda.position.set(7.5, 5.2, -125.5);
         if (pagoda.material) pagoda.material.depthWrite = false;
         multiplaneGroup.add(pagoda);
 
-        const house4 = createBillboard('assets/house_country_minka.png', 14.5, 14.5);
+        const house4 = createBillboard('assets/house_country_minka.png?v=2', 14.5, 14.5);
         house4.position.set(0.0, 5.4, -159.0);
         if (house4.material) house4.material.depthWrite = false;
         multiplaneGroup.add(house4);
