@@ -546,15 +546,17 @@
         }));
 
         const sakuraBurstParticles = [];
-        const SAKURA_COUNT = 360;
+        const SAKURA_COUNT = 600;
         for (let i = 0; i < SAKURA_COUNT; i++) {
             const mat = sakuraMaterials[i % sakuraMaterials.length];
-            const size = (i % 3 === 0) ? 0.85 : 0.52;
+            const size = (i % 3 === 0) ? 0.90 : 0.56;
             const mesh = new THREE.Mesh(new THREE.PlaneGeometry(size, size), mat);
+            // Cluster X tightly (-12 to +12) around couple position (X=0, Z=-180.7) so flowers fall directly on couple!
+            const xSpread = (i % 2 === 0) ? (Math.random() - 0.5) * 12.0 : (Math.random() - 0.5) * 28.0;
             mesh.position.set(
-                (Math.random() - 0.5) * 30.0,
-                Math.random() * 24.0 + 2.0,
-                -170.0 - Math.random() * 22.0
+                xSpread,
+                Math.random() * 26.0 + 2.0,
+                -172.0 - Math.random() * 18.0
             );
             mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
             mesh.userData = {
@@ -1808,18 +1810,22 @@
 
             // Falling Sakura Cherry Blossom Flowers, Pink Petals & Golden Leaves Burst (Diorama 6: 51.5s - 59.0s)
             const sakuraActive = (curAudioTime >= 51.5 && curAudioTime <= 59.0);
-            const isSpringWord = (curAudioTime >= 55.5 && curAudioTime <= 58.8); // Massive burst when "Spring" word appears!
+            const isSpringWord = (curAudioTime >= 55.5 && curAudioTime <= 58.8); // Massive blossom shower directly ON couple when "Spring" word appears!
             sakuraBurstParticles.forEach(p => {
                 if (sakuraActive) {
                     p.visible = true;
-                    const speedMult = isSpringWord ? 2.5 : 1.0;
+                    const speedMult = isSpringWord ? 3.2 : 1.2;
                     p.rotation.x += p.userData.rotX * speedMult;
                     p.rotation.y += p.userData.rotY * speedMult;
                     p.rotation.z += p.userData.rotZ * speedMult;
                     p.position.y -= p.userData.fallSpeed * speedMult;
-                    p.position.x += Math.sin(curAudioTime * p.userData.swayFreq + p.userData.seed) * p.userData.swayAmp * (isSpringWord ? 1.8 : 1.0);
+                    p.position.x += Math.sin(curAudioTime * p.userData.swayFreq + p.userData.seed) * p.userData.swayAmp * (isSpringWord ? 2.0 : 1.0);
                     if (p.position.y < -1.0) {
-                        p.position.y = 18.0 + Math.random() * 8.0;
+                        p.position.y = 18.0 + Math.random() * 10.0;
+                        if (isSpringWord) {
+                            // Shower focused directly over the couple (X between -8 and +8)
+                            p.position.x = (Math.random() - 0.5) * 16.0;
+                        }
                     }
                 } else {
                     p.visible = false;
