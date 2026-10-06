@@ -727,10 +727,10 @@
         // --- 8. HELPER FUNCTIONS & EXACT CHARACTER ASPECT RATIOS ---
         function createBillboard(texPath, width, height) {
             const tex = textureLoader.load(texPath);
-            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
-            else if (THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
-            tex.minFilter = THREE.LinearFilter;
-            const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, alphaTest: 0.12, toneMapped: false });
+            tex.generateMipmaps = true;
+            tex.minFilter = THREE.LinearMipmapLinearFilter;
+            tex.magFilter = THREE.LinearFilter;
+            const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, alphaTest: 0.12 });
             return new THREE.Mesh(new THREE.PlaneGeometry(width, height), mat);
         }
 
@@ -739,9 +739,9 @@
             2: 674 / 1002,  // 0.673
             3: 616 / 934,   // 0.660
             4: 520 / 1002,  // 0.519
-            5: 694 / 989,   // 0.702
-            6: 3 / 4,       // 0.750
-            7: 527 / 955,   // 0.552
+            5: 3 / 4,       // 0.750 - Matching user reference art style
+            6: 3 / 4,       // 0.750 - Matching user reference art style
+            7: 527 / 955,   // 0.552 - Clean riverwalk couple cutout
             8: 772 / 1000   // 0.772
         };
 
@@ -753,8 +753,7 @@
                 transparent: true,
                 side: THREE.DoubleSide,
                 alphaTest: 0.15,
-                depthWrite: true,
-                toneMapped: false
+                depthWrite: true
             });
 
             const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), mat);
@@ -766,7 +765,7 @@
             sh.position.set(xPos, -1.33, zPos);
             multiplaneGroup.add(sh);
 
-            // DYNAMIC UN-STRETCHED ASPECT RATIO ADJUSTMENT FROM LOADED IMAGE DIMENSIONS
+            // DYNAMIC UN-STRETCHED ASPECT RATIO ADJUSTMENT & SMOOTH MIPMAP FILTERING
             const tex = textureLoader.load(imgPath, (t) => {
                 if (t.image && t.image.width && t.image.height) {
                     const actualAspect = t.image.width / t.image.height;
@@ -777,9 +776,9 @@
                     sh.geometry = new THREE.PlaneGeometry(correctW * 0.92, height * 0.32);
                 }
             });
-            if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
-            else if (THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
-            tex.minFilter = THREE.LinearFilter;
+            tex.generateMipmaps = true;
+            tex.minFilter = THREE.LinearMipmapLinearFilter;
+            tex.magFilter = THREE.LinearFilter;
             mat.map = tex;
 
             mesh.userData.noFade = true; // COUPLE IMAGES NEVER FADE OUT OR IN!
