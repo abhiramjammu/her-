@@ -436,7 +436,7 @@
 
         const camera = new THREE.PerspectiveCamera(54, window.innerWidth / window.innerHeight, 0.1, 1000);
         window.camera = camera;
-        camera.position.set(0, 1.6, 12);
+        camera.position.set(0, 1.6, 22.0);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1050,37 +1050,37 @@
         // =========================================================================
         const coupleMeshes = [];
 
-        // --- ENTRANCE ARCHWAY (Z = 28.0, Camera flies through it first thing) ---
-        const entranceTorii = createBillboard('assets/torii_arch_clean.png', 26.0, 26.0);
-        entranceTorii.position.set(0.0, 11.5, 28.0);
+        // --- ENTRANCE ARCHWAY (Z = 16.0, Right in front of camera at Z=22.0) ---
+        const entranceTorii = createBillboard('assets/torii_arch_clean.png', 22.0, 22.0);
+        entranceTorii.position.set(0.0, 9.5, 16.0);
         if (entranceTorii.material) entranceTorii.material.depthWrite = false;
         multiplaneGroup.add(entranceTorii);
 
-        // --- 3 INTRO FULL SENTENCE PLANES (Two-Line, Big, Static Positions) ---
+        // --- 3 INTRO FULL SENTENCE PLANES (Large Two-Line Typography, All Visible From Start) ---
         function createFullSentenceTexture(line1, line2) {
             const canvas = document.createElement('canvas');
             canvas.width = 2048;
-            canvas.height = line2 ? 640 : 400;
+            canvas.height = line2 ? 760 : 480;
             const ctx = canvas.getContext('2d');
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            function drawLine(text, y) {
-                ctx.font = '900 110px "Montserrat", "Zen Maru Gothic", sans-serif';
-                ctx.letterSpacing = '6px';
+            function drawLine(text, y, fontSize) {
+                ctx.font = `900 ${fontSize || 125}px "Montserrat", "Zen Maru Gothic", sans-serif`;
+                ctx.letterSpacing = '7px';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
-                ctx.shadowBlur = 28;
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
+                ctx.shadowBlur = 32;
                 ctx.shadowOffsetX = 0;
                 ctx.shadowOffsetY = 10;
-                ctx.lineWidth = 22;
+                ctx.lineWidth = 26;
                 ctx.strokeStyle = '#ffffff';
                 ctx.strokeText(text, 1024, y);
 
                 ctx.shadowBlur = 0;
-                const grad = ctx.createLinearGradient(0, y - 70, 0, y + 70);
+                const grad = ctx.createLinearGradient(0, y - 80, 0, y + 80);
                 grad.addColorStop(0, '#ffffff');
                 grad.addColorStop(0.35, '#ff66b2');
                 grad.addColorStop(1, '#ff0066');
@@ -1089,10 +1089,10 @@
             }
 
             if (line2) {
-                drawLine(line1, 220);
-                drawLine(line2, 420);
+                drawLine(line1, 240, 120);
+                drawLine(line2, 510, 130);
             } else {
-                drawLine(line1, 200);
+                drawLine(line1, 240, 155);
             }
 
             const texture = new THREE.CanvasTexture(canvas);
@@ -1101,9 +1101,9 @@
         }
 
         const INTRO_SENTENCES_DEF = [
-            { line1: "Thank You For", line2: "Choosing Me",     z: 18.0, height: 4.2 },
-            { line1: "I Love You",    line2: null,               z:  4.0, height: 4.8 },
-            { line1: "You Are My",   line2: "Whole World Now",  z: -12.0, height: 4.2 }
+            { line1: "THANK YOU FOR", line2: "CHOOSING ME",     z:   9.0, height: 4.8 },
+            { line1: "I LOVE YOU",    line2: null,              z:  -2.0, height: 5.2 },
+            { line1: "YOU ARE MY",   line2: "WHOLE WORLD NOW", z: -14.0, height: 4.8 }
         ];
 
         const introSentences = INTRO_SENTENCES_DEF.map(item => {
@@ -1118,7 +1118,7 @@
             });
             const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, item.height), mat);
             // All sentences are visible and placed at fixed 3D world positions from the start
-            mesh.position.set(0.0, 2.6, item.z);
+            mesh.position.set(0.0, 2.7, item.z);
             mesh.visible = true;
             scene.add(mesh);
             return { mesh, mat, z: item.z };
@@ -1302,7 +1302,7 @@
 
         // Cherry trees placed 4.7 units BEHIND couple at Z = -134.5 (No overlap or Z-fighting)
         [-8.5, 8.5].forEach(xPos => {
-            const cherryTree = createBillboard('assets/tree_magenta.png?v=106', 13.5, 14.0);
+            const cherryTree = createBillboard('assets/tree_magenta.png?v=110', 13.5, 14.0);
             cherryTree.position.set(xPos, 5.66, -134.5);
             multiplaneGroup.add(cherryTree);
         });
@@ -1420,12 +1420,12 @@
         coupleMeshes.push(c6);
 
         // Whitish-pink trees standing UPRIGHT (rotation.z = 0) grounded at LYRICS text position (Z = -178.5, NO floating mid-air trees!)
-        const archTreeLeft = createBillboard('assets/tree_bonsai.png?v=106', 13.5, 14.0);
+        const archTreeLeft = createBillboard('assets/tree_bonsai.png?v=110', 13.5, 14.0);
         archTreeLeft.position.set(-8.5, -1.34 + 7.0, -178.5);
         archTreeLeft.rotation.z = 0; // Standing upright, no leaning!
         if (archTreeLeft.material) archTreeLeft.material.depthWrite = false;
 
-        const archTreeRight = createBillboard('assets/tree_bonsai.png?v=106', 13.5, 14.0);
+        const archTreeRight = createBillboard('assets/tree_bonsai.png?v=110', 13.5, 14.0);
         archTreeRight.position.set(8.5, -1.34 + 7.0, -178.5);
         archTreeRight.rotation.z = 0; // Standing upright, no leaning!
         if (archTreeRight.material) archTreeRight.material.depthWrite = false;
@@ -2223,27 +2223,40 @@
                 sun1.visible = sun1Opacity > 0.01;
             }
 
-            // 3 Intro Sentence Planes: always visible from afar, fade as camera passes through
-            // Only hide them once the song lyrics begin (t >= 14.5)
+            // Entrance Torii Arch fade as camera passes through at Z = 16.0
+            if (entranceTorii && entranceTorii.material) {
+                const archDist = camera.position.z - 16.0;
+                if (archDist < -3.0) {
+                    entranceTorii.visible = false;
+                } else if (archDist <= 1.8) {
+                    entranceTorii.visible = true;
+                    entranceTorii.material.opacity = Math.max(0.0, (archDist + 3.0) / 4.8);
+                } else {
+                    entranceTorii.visible = true;
+                    entranceTorii.material.opacity = 1.0;
+                }
+            }
+
+            // 3 Intro Sentence Planes: ALWAYS 100% visible from afar right from the start!
+            // Only fade as camera passes straight through each sentence plane
             introSentences.forEach(item => {
-                if (curAudioTime >= 14.5) {
+                if (curAudioTime >= 15.0) {
                     item.mesh.visible = false;
                     return;
                 }
-                const dist = camera.position.z - item.z; // positive = camera is ahead of (behind) plane
-                if (dist < -4.0) {
+                const dist = camera.position.z - item.z; // camera.z - sentence.z
+                if (dist < -2.5) {
                     // Camera already passed through — hide
                     item.mesh.visible = false;
-                } else {
+                } else if (dist <= 1.8) {
+                    // Camera passing straight through — smooth dissolve
                     item.mesh.visible = true;
-                    if (dist >= 1.5) {
-                        // Camera still approaching — fully visible
-                        item.mat.opacity = 1.0;
-                    } else {
-                        // Camera passing through — smooth fade out
-                        const fade = Math.max(0.0, (dist + 4.0) / 5.5);
-                        item.mat.opacity = fade * fade;
-                    }
+                    const fade = Math.max(0.0, (dist - (-2.5)) / 4.3);
+                    item.mat.opacity = fade * fade;
+                } else {
+                    // In front of camera — ALWAYS 100% VISIBLE FROM THE START!
+                    item.mesh.visible = true;
+                    item.mat.opacity = 1.0;
                 }
             });
 
@@ -2318,15 +2331,20 @@
                 }
             }
 
-            const speedZ = 3.4;
-            const continuousTravelZ = 12.0 - ((curAudioTime - 1.0) * speedZ);
+            let continuousTravelZ;
+            if (curAudioTime <= 15.4) {
+                // Intro fly-through: camera glides from Z = 22.0 (t=0) down to Z = -37.0 (t=15.4)
+                continuousTravelZ = 22.0 - (curAudioTime * (59.0 / 15.4));
+            } else {
+                continuousTravelZ = -37.0 - ((curAudioTime - 15.4) * 3.4);
+            }
 
-            let targetCamPos = new THREE.Vector3(0, 1.4, continuousTravelZ);
+            let targetCamPos = new THREE.Vector3(0, 1.6, continuousTravelZ);
             let targetLookAt = new THREE.Vector3(0, 1.6, continuousTravelZ - 14.0);
             let targetCamRotZ = 0;
 
-            if (curAudioTime < 14.5) {
-                // Straight line fly-through during intro sequence
+            if (curAudioTime < 15.4) {
+                // Straight line fly-through down the center of the road during intro sequence
                 targetCamPos.set(0, 1.6, continuousTravelZ);
                 targetLookAt.set(0, 1.6, continuousTravelZ - 14.0);
                 targetCamRotZ = 0;
