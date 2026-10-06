@@ -3,211 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Girl Made In Japan - 3D Kinetic Typographic Showcase</title>
+    <title>The Girl Made In Japan — 3D Cinematic Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;600;800;900&family=Zen+Maru+Gothic:wght@900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Zen+Maru+Gothic:wght@900&display=swap');
+        @keyframes fadeInUp   { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes floatPetal { 0%,100% { transform:translateY(0) rotate(0deg);  } 50% { transform:translateY(-14px) rotate(8deg); } }
+        @keyframes shimmer    { 0%,100% { background-position: 0%   50%; } 50% { background-position: 100% 50%; } }
+        @keyframes pulse      { 0%,100% { box-shadow: 0 0 0 0 rgba(255,0,127,.35); } 70% { box-shadow: 0 0 0 14px rgba(255,0,127,0); } }
+        @keyframes rotateHalo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes petalFall  {
+            0%   { opacity: 0; transform: translateY(-20px) rotate(0deg) scale(.7); }
+            10%  { opacity: 1; }
+            90%  { opacity: .6; }
+            100% { opacity: 0; transform: translateY(110vh) rotate(540deg) scale(1.1); }
+        }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            margin: 0;
             overflow: hidden;
-            background: #fff5f7;
+            background: #fff8f9;
             font-family: 'Montserrat', 'Zen Maru Gothic', sans-serif;
             user-select: none;
         }
 
+        /* ── LANDING OVERLAY ───────────────────────── */
         #ui {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            background: rgba(255, 245, 247, 0.45);
-            backdrop-filter: blur(12px);
-            z-index: 200;
-            cursor: pointer;
-            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
-        }
-
-        .start-box {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(255, 240, 246, 0.94));
-            border: 2px solid rgba(255, 0, 127, 0.30);
-            border-radius: 32px;
-            padding: 44px 54px;
-            box-shadow: 0 24px 60px rgba(255, 0, 127, 0.22), 0 10px 25px rgba(90, 24, 154, 0.12);
+            position: fixed;
+            inset: 0;
+            z-index: 300;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            max-width: 780px;
-            margin: 20px;
-            text-align: center;
-            backdrop-filter: blur(16px);
-        }
-
-        .title-badge {
-            font-size: 13px;
-            font-weight: 900;
-            letter-spacing: 5px;
-            color: #ff007f;
-            text-transform: uppercase;
-            margin-bottom: 14px;
-            padding: 8px 26px;
-            background: rgba(255, 0, 127, 0.08);
-            border-radius: 30px;
-            border: 2px solid rgba(255, 0, 127, 0.25);
-            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.15);
-        }
-
-        h1 {
-            color: #ff007f;
-            font-size: clamp(32px, 5.2vw, 68px);
-            font-weight: 900;
-            letter-spacing: 5px;
-            margin: 0 0 10px 0;
-            text-shadow: 0 15px 40px rgba(255, 0, 127, 0.35);
-            text-align: center;
-        }
-        h1 span { color: #5a189a; }
-
-        .subtitle {
-            font-size: 14px;
-            font-weight: 800;
-            letter-spacing: 3.5px;
-            color: #7b2cbf;
-            margin-bottom: 36px;
-            text-transform: uppercase;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
             justify-content: center;
+            background: linear-gradient(145deg, #fff8f9 0%, #fce4ec 40%, #f3e5f5 100%);
+            transition: opacity .8s ease, visibility .8s;
+        }
+        #ui.hidden {
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
         }
 
-        .btn {
-            background: linear-gradient(135deg, #ff007f, #9d4edd);
-            color: #fff;
-            border: none;
-            padding: 18px 44px;
-            font-size: 16px;
-            font-weight: 900;
-            letter-spacing: 2.8px;
-            text-transform: uppercase;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 12px 30px rgba(255, 0, 127, 0.40);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            outline: none;
+        /* falling petals */
+        .petal {
+            position: absolute;
+            width: 10px; height: 14px;
+            border-radius: 60% 40% 60% 40% / 50% 50% 60% 60%;
+            opacity: 0;
+            animation: petalFall linear infinite;
+            pointer-events: none;
+        }
+
+        /* card */
+        .landing-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255,255,255,.78);
+            border: 1px solid rgba(255,255,255,.95);
+            border-radius: 36px;
+            padding: 56px 64px 52px;
+            max-width: 720px;
+            width: calc(100vw - 40px);
+            text-align: center;
+            backdrop-filter: blur(28px) saturate(1.5);
+            box-shadow:
+                0 2px 0 rgba(255,255,255,.9) inset,
+                0 40px 80px rgba(186,0,80,.12),
+                0 12px 28px rgba(90,24,154,.08);
+            animation: fadeInUp .9s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        /* decorative rotating halo ring */
+        .landing-card::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 38px;
+            background: linear-gradient(135deg, #ff9ec8, #d7b8f5, #ffb3d0, #c084fc, #ff9ec8);
+            background-size: 300% 300%;
+            animation: shimmer 5s ease infinite, rotateHalo 16s linear infinite;
+            z-index: -1;
+            opacity: .55;
+        }
+
+        /* top eyebrow tag */
+        .eyebrow {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #c2185b;
+            background: linear-gradient(90deg, rgba(255,0,127,.07), rgba(156,39,176,.07));
+            border: 1px solid rgba(194,24,91,.2);
+            border-radius: 100px;
+            padding: 7px 20px;
+            margin-bottom: 28px;
+            animation: fadeInUp .9s .1s cubic-bezier(.22,1,.36,1) both;
         }
-        .btn:hover {
-            transform: translateY(-3px) scale(1.04);
-            box-shadow: 0 18px 40px rgba(255, 0, 127, 0.55);
+        .eyebrow-dot { width:7px; height:7px; border-radius:50%; background:#ff4081; flex-shrink:0; animation: pulse 2s infinite; }
+
+        /* big heading */
+        .landing-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(32px, 6.2vw, 66px);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            color: #1a0a2e;
+            margin-bottom: 6px;
+            animation: fadeInUp .9s .18s cubic-bezier(.22,1,.36,1) both;
         }
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.85);
-            color: #7b2cbf;
-            border: 2px solid rgba(123, 44, 191, 0.3);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-        }
-        .btn-secondary:hover {
-            background: #fff;
-            color: #ff007f;
-            border-color: #ff007f;
+        .landing-title em {
+            font-style: italic;
+            background: linear-gradient(100deg, #ff1a75, #9c27b0, #e91e8c);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s ease infinite;
         }
 
-        #controls {
+        /* sub-heading */
+        .landing-sub {
+            font-size: clamp(10px, 1.3vw, 13px);
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #9c27b0;
+            margin-bottom: 28px;
+            animation: fadeInUp .9s .26s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        /* divider */
+        .landing-divider {
+            width: 60px; height: 2px;
+            background: linear-gradient(90deg, transparent, #ff4081, transparent);
+            margin: 0 auto 28px;
+            animation: fadeInUp .9s .30s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        /* description text */
+        .landing-desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(15px, 2vw, 19px);
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.75;
+            color: #4a2060;
+            max-width: 520px;
+            margin: 0 auto 14px;
+            animation: fadeInUp .9s .34s cubic-bezier(.22,1,.36,1) both;
+        }
+        .landing-desc strong { font-style: normal; font-weight: 700; color: #c2185b; }
+
+        /* date tag */
+        .landing-date {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #ab47bc;
+            margin-bottom: 40px;
+            animation: fadeInUp .9s .40s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        /* CTA button */
+        .begin-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            background: linear-gradient(130deg, #ff1a75 0%, #9c27b0 100%);
+            color: #fff;
+            border: none;
+            padding: 20px 52px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border-radius: 100px;
+            cursor: pointer;
+            box-shadow: 0 16px 40px rgba(255,0,127,.38), 0 4px 12px rgba(156,39,176,.22);
+            transition: all .3s cubic-bezier(.22,1,.36,1);
+            outline: none;
+            animation: fadeInUp .9s .50s cubic-bezier(.22,1,.36,1) both;
+            position: relative;
+            overflow: hidden;
+        }
+        .begin-btn::after {
+            content: '';
             position: absolute;
+            inset: 0;
+            background: linear-gradient(130deg, rgba(255,255,255,.18) 0%, rgba(255,255,255,0) 50%);
+            border-radius: inherit;
+        }
+        .begin-btn:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 24px 52px rgba(255,0,127,.50), 0 6px 16px rgba(156,39,176,.28);
+        }
+        .begin-btn:active { transform: translateY(-1px) scale(.99); }
+
+        /* play icon circle */
+        .btn-icon {
+            width: 32px; height: 32px;
+            background: rgba(255,255,255,.22);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .btn-icon svg { width: 14px; height: 14px; fill: #fff; margin-left: 2px; }
+
+        /* subtle footer hint */
+        .landing-hint {
+            margin-top: 22px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #ce93d8;
+            animation: fadeInUp .9s .60s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        /* floating cherry blossom emoji petals */
+        .petal-1  { left: 5%;  animation-duration: 9s;  animation-delay: 0s;   background: #ffb3c6; }
+        .petal-2  { left: 15%; animation-duration: 12s; animation-delay: 1.2s; background: #f8bbd0; width:8px; height:12px; }
+        .petal-3  { left: 26%; animation-duration: 8s;  animation-delay: 2.5s; background: #e1bee7; width:12px; height:16px; }
+        .petal-4  { left: 38%; animation-duration: 14s; animation-delay: 0.4s; background: #ffcdd2; }
+        .petal-5  { left: 50%; animation-duration: 10s; animation-delay: 1.8s; background: #f48fb1; width:9px; height:13px; }
+        .petal-6  { left: 62%; animation-duration: 11s; animation-delay: 3.1s; background: #ce93d8; }
+        .petal-7  { left: 74%; animation-duration: 8.5s;animation-delay: 0.9s; background: #ffaab8; width:11px; height:15px; }
+        .petal-8  { left: 85%; animation-duration: 13s; animation-delay: 2.2s; background: #e8bdf5; }
+        .petal-9  { left: 92%; animation-duration: 9.5s;animation-delay: 1.5s; background: #ffb3c6; width:8px; height:12px; }
+        .petal-10 { left: 44%; animation-duration: 7.5s;animation-delay: 4.0s; background: #d8b5f5; width:13px; height:17px; }
+
+        /* ── CONTROLS BAR (shown during experience) ─ */
+        #controls {
+            position: fixed;
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
             gap: 14px;
-            background: rgba(255, 255, 255, 0.88);
+            background: rgba(255,255,255,.90);
             backdrop-filter: blur(20px);
             padding: 10px 22px;
             border-radius: 40px;
-            box-shadow: 0 10px 32px rgba(255, 0, 127, 0.18);
-            border: 1px solid rgba(255, 0, 127, 0.22);
+            box-shadow: 0 10px 32px rgba(255,0,127,.18);
+            border: 1px solid rgba(255,0,127,.22);
             z-index: 100;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s ease;
+            transition: opacity .4s ease;
         }
-        #controls.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        #controls.active { opacity:1; pointer-events:auto; }
 
         .ctrl-btn {
-            background: none;
-            border: none;
-            color: #5a189a;
-            cursor: pointer;
-            padding: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.2s;
+            background: none; border: none; color: #5a189a;
+            cursor: pointer; padding: 6px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: all .2s;
         }
-        .ctrl-btn:hover {
-            color: #ff007f;
-            transform: scale(1.15);
-            background: rgba(255, 0, 127, 0.08);
-        }
-        .ctrl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+        .ctrl-btn:hover { color:#ff007f; transform:scale(1.15); background:rgba(255,0,127,.08); }
+        .ctrl-btn svg { width:22px; height:22px; fill:currentColor; }
 
         .time-display {
-            font-size: 13px;
-            font-weight: 800;
-            color: #5a189a;
-            letter-spacing: 1px;
-            min-width: 82px;
-            text-align: center;
+            font-size:13px; font-weight:800; color:#5a189a;
+            letter-spacing:1px; min-width:82px; text-align:center;
         }
 
         #scrubber {
-            -webkit-appearance: none;
-            appearance: none;
-            width: clamp(140px, 20vw, 260px);
-            height: 6px;
-            background: rgba(123, 44, 191, 0.18);
-            border-radius: 3px;
-            outline: none;
-            cursor: pointer;
+            -webkit-appearance: none; appearance: none;
+            width: clamp(140px, 20vw, 260px); height:6px;
+            background: rgba(123,44,191,.18); border-radius:3px;
+            outline:none; cursor:pointer;
         }
         #scrubber::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
+            -webkit-appearance:none; appearance:none;
+            width:16px; height:16px; border-radius:50%;
             background: linear-gradient(135deg, #ff007f, #9d4edd);
-            box-shadow: 0 2px 8px rgba(255, 0, 127, 0.4);
-            cursor: pointer;
-            transition: transform 0.15s;
+            box-shadow: 0 2px 8px rgba(255,0,127,.4);
+            cursor:pointer; transition:transform .15s;
         }
-        #scrubber::-webkit-slider-thumb:hover {
-            transform: scale(1.25);
-        }
+        #scrubber::-webkit-slider-thumb:hover { transform:scale(1.25); }
 
+        /* ── REPLAY MODAL ────────────────────────── */
         #replayModal {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: none;
-            flex-direction: column;
-            justify-content: center; align-items: center;
-            background: rgba(255, 245, 247, 0.40);
-            backdrop-filter: blur(8px);
-            z-index: 210;
+            position: fixed; inset:0;
+            display:none; flex-direction:column;
+            justify-content:center; align-items:center;
+            background: rgba(255,245,247,.45);
+            backdrop-filter:blur(14px);
+            z-index:310;
         }
-        #replayModal.active { display: flex; }
+        #replayModal.active { display:flex; }
+        #replayModal h1 {
+            font-family:'Cormorant Garamond',serif;
+            font-size:clamp(32px,5vw,62px); font-weight:700;
+            color:#1a0a2e; margin-bottom:8px; text-align:center;
+        }
+        #replayModal h1 span {
+            background:linear-gradient(100deg,#ff1a75,#9c27b0);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+        }
+        #replayModal .replay-sub {
+            font-size:12px; font-weight:700; letter-spacing:3px;
+            text-transform:uppercase; color:#9c27b0; margin-bottom:36px;
+        }
+        .replay-btn {
+            display:inline-flex; align-items:center; gap:12px;
+            background:linear-gradient(130deg,#ff1a75,#9c27b0);
+            color:#fff; border:none;
+            padding:18px 46px; font-family:'Montserrat',sans-serif;
+            font-size:12px; font-weight:800; letter-spacing:3px;
+            text-transform:uppercase; border-radius:100px; cursor:pointer;
+            box-shadow:0 16px 40px rgba(255,0,127,.38);
+            transition:all .3s cubic-bezier(.22,1,.36,1);
+        }
+        .replay-btn:hover { transform:translateY(-3px) scale(1.03); box-shadow:0 22px 50px rgba(255,0,127,.50); }
+
     </style>
     <script>
         window.__appReady = false;
@@ -215,7 +333,8 @@
         function handleStartClick(sec) {
             const ui = document.getElementById('ui');
             if (ui) {
-                ui.style.display = 'none';
+                ui.classList.add('hidden');
+                setTimeout(() => { ui.style.display = 'none'; }, 800);
             }
             if (window.__appReady && window.__startExperience) {
                 window.__startExperience(sec);
@@ -228,21 +347,50 @@
 <body>
     <audio id="audio" src="song.mp3" preload="auto"></audio>
 
+    <!-- ── LANDING PAGE ───────────────────────────────── -->
     <div id="ui">
-        <div class="start-box">
-            <div class="title-badge">A Dedicated 3D Cinematic Journey</div>
-            <h1>MY FUTURE PARTNER, <span>THIS IS FOR YOU</span></h1>
-            <div class="subtitle" style="font-size: 15px; font-weight: 700; line-height: 1.65; letter-spacing: 1.5px; text-transform: none; max-width: 680px; text-align: center; margin-bottom: 32px; color: #5a189a;">
-                A timeless 3D journey through love, music, and quiet moments, crafted specially for my future wife.<br>
-                Written in the stars and created with all my heart in <strong>August 2026</strong>.<br>
-                Every frame and memory here belongs to you.
+        <!-- Falling petals -->
+        <div class="petal petal-1"></div>
+        <div class="petal petal-2"></div>
+        <div class="petal petal-3"></div>
+        <div class="petal petal-4"></div>
+        <div class="petal petal-5"></div>
+        <div class="petal petal-6"></div>
+        <div class="petal petal-7"></div>
+        <div class="petal petal-8"></div>
+        <div class="petal petal-9"></div>
+        <div class="petal petal-10"></div>
+
+        <div class="landing-card">
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                A Personal 3D Cinematic Gift
             </div>
-            <div class="btn-group">
-                <button class="btn" id="playIntroBtn" onclick="handleStartClick(0.0);">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                    BEGIN EXPERIENCE
-                </button>
-            </div>
+
+            <h1 class="landing-title">
+                My Future Partner,<br><em>This Is For You</em>
+            </h1>
+
+            <div class="landing-sub">The Girl Made In Japan &nbsp;·&nbsp; 3D Journey</div>
+
+            <div class="landing-divider"></div>
+
+            <p class="landing-desc">
+                A timeless cinematic walk through love, music,<br>
+                and quiet moments — crafted with all my heart,<br>
+                <strong>especially for my future wife.</strong>
+            </p>
+
+            <div class="landing-date">✦ &nbsp; Created August 2026 &nbsp; ✦</div>
+
+            <button class="begin-btn" id="playIntroBtn" onclick="handleStartClick(0.0);">
+                <span class="btn-icon">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </span>
+                Begin Experience
+            </button>
+
+            <div class="landing-hint">🌸 &nbsp; Best experienced with headphones &nbsp; 🌸</div>
         </div>
     </div>
 
@@ -269,9 +417,9 @@
 
     <div id="replayModal">
         <h1>Thank You <span>For Watching</span></h1>
-        <div class="subtitle">The Girl Made In Japan &bull; 3D Showcase Finished</div>
-        <button class="btn" id="btnReplay">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+        <div class="replay-sub">The Girl Made In Japan &bull; 3D Journey Complete</div>
+        <button class="replay-btn" id="btnReplay">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
             Replay Experience
         </button>
     </div>
@@ -1774,18 +1922,13 @@
             }
         }
 
-                window.__startExperience = startExperience;
+        window.__startExperience = startExperience;
         window.__appReady = true;
         if (window.__pendingStartSec !== null) {
             startExperience(window.__pendingStartSec);
         }
 
-        playBtn.addEventListener('click', (e) => { e.stopPropagation(); startExperience(15.4); });
         playIntroBtn.addEventListener('click', (e) => { e.stopPropagation(); startExperience(0.0); });
-        ui.addEventListener('click', () => { startExperience(15.4); });
-        document.body.addEventListener('click', () => {
-            if (!experienceActive) startExperience(15.4);
-        });
         btnReplay.addEventListener('click', () => { replayModal.classList.remove('active'); startExperience(0.0); });
 
         btnPlayPause.addEventListener('click', () => {
