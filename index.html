@@ -901,8 +901,8 @@
             2: 674 / 1002,  // 0.673
             3: 616 / 934,   // 0.660
             4: 520 / 1002,  // 0.519
-            5: 3 / 4,       // 0.750 - Matching user reference art style
-            6: 357 / 758,   // 0.471 - Exact aspect ratio for new cherry blossom couple cutout
+            5: 694 / 989,   // 0.702
+            6: 896 / 1200,  // 0.747 - Clean Ghibli spring couple
             7: 527 / 955,   // 0.552 - Clean riverwalk couple cutout
             8: 772 / 1000   // 0.772
         };
@@ -1125,7 +1125,7 @@
         });
 
         // --- DIORAMA 1 (Sentence 1: Z = -56.7) - RADIO, GROUNDED CAR & GRAPHIC SUN ---
-        const c1 = createCharacterOnRoad(1, 'assets/couple_1_tight.png', -56.7, -0.6);
+        const c1 = createCharacterOnRoad(1, 'assets/couple_1_tight.png?v=500', -56.7, -0.6);
         coupleMeshes.push(c1);
 
         // Standalone vintage car removed per user request (couple stays on road)
@@ -1202,7 +1202,7 @@
 
 
         // --- DIORAMA 2 (Sentence 2: Z = -83.6) - 10 VOLUMETRIC 3D STREET LAMPS ---
-        const c2 = createCharacterOnRoad(2, 'assets/couple_2_tight.png', -83.6, 0.6);
+        const c2 = createCharacterOnRoad(2, 'assets/couple_2_tight.png?v=500', -83.6, 0.6);
         coupleMeshes.push(c2);
 
         // 10 Volumetric Street Lamps (5 on Left @ X=-3.8, 5 on Right @ X=+3.8)
@@ -1221,7 +1221,7 @@
 
 
         // --- DIORAMA 3 (Sentence 3: Z = -104.0) - SUMMER BEACH & UMBRELLA ---
-        const c3 = createCharacterOnRoad(3, 'assets/couple_3_tight.png', -104.0, -0.6);
+        const c3 = createCharacterOnRoad(3, 'assets/couple_3_tight.png?v=500', -104.0, -0.6);
         coupleMeshes.push(c3);
 
         const umbrella = createBillboard('assets/beach_umbrella.png', 6.2, 6.2);
@@ -1297,7 +1297,7 @@
 
 
         // --- DIORAMA 4 (Sentence 4: Z = -129.8) - NO FLICKER, CHERRY TREES SET BACK ---
-        const c4 = createCharacterOnRoad(4, 'assets/couple_4_tight.png', -129.8, 0.6);
+        const c4 = createCharacterOnRoad(4, 'assets/couple_4_tight.png?v=500', -129.8, 0.6);
         coupleMeshes.push(c4);
 
         // Cherry trees placed 4.7 units BEHIND couple at Z = -134.5 (No overlap or Z-fighting)
@@ -1364,7 +1364,7 @@
 
 
         // --- DIORAMA 5 (Sentence 5: Z = -156.0, 45.00s) - SHINY GEMSTONES ON HIGH FLANKS ---
-        const c5 = createCharacterOnRoad(5, 'assets/couple_5_tight.png', -156.0, -0.6);
+        const c5 = createCharacterOnRoad(5, 'assets/couple_5_tight.png?v=500', -156.0, -0.6);
         coupleMeshes.push(c5);
 
         // Shiny Golden & Crystal Gemstones on HIGH FLANKS (|X| > 5.8, Y > 4.2, NEVER around couple)
@@ -1416,7 +1416,7 @@
 
         // --- DIORAMA 6 (Sentence 6: Z = -180.7, 52.00s) - CLEAN COUPLE, GROUNDED UPRIGHT WHITISH-PINK TREES AT LYRICS Z=-178.5 & CLOSE MOUNTAIN ---
         // Single Main Cherry Blossom Couple (Clean tight cutout of ONLY the couple, no background trees)
-        const c6 = createCharacterOnRoad(6, 'assets/couple_6_v3.png?v=115', -180.7, 0.0);
+        const c6 = createCharacterOnRoad(6, 'assets/couple_6_v3.png?v=500', -180.7, 0.0);
         coupleMeshes.push(c6);
 
         // Whitish-pink trees standing UPRIGHT (rotation.z = 0) grounded at LYRICS text position (Z = -178.5, NO floating mid-air trees!)
@@ -1448,7 +1448,7 @@
 
 
         // --- DIORAMA 7 (Sentence 7: Z = -208.0) - COUNTRYSIDE RIVERSIDE HOUSE (60% SIZE), STONES & ARCHED BRIDGE (BIT MORE RIGHT) ---
-        const c7 = createCharacterOnRoad(7, 'assets/couple_7_tight.png', -208.0, -0.6);
+        const c7 = createCharacterOnRoad(7, 'assets/couple_7_tight.png?v=500', -208.0, -0.6);
         coupleMeshes.push(c7);
 
         // Small Riverside House on the LEFT side of the road (reduced to 60% size: 7.8 x 7.8)
@@ -1494,7 +1494,7 @@
 
 
         // --- DIORAMA 8 (Sentence 8: Z = -234.2) - CYBER TOKYO & BALLOON ---
-        const c8 = createCharacterOnRoad(8, 'assets/couple_8_tight.png', -234.2, 0.6);
+        const c8 = createCharacterOnRoad(8, 'assets/couple_8_tight.png?v=500', -234.2, 0.6);
         coupleMeshes.push(c8);
 
         const balloon = createBillboard('assets/balloon.png', 7.5, 9.5);
